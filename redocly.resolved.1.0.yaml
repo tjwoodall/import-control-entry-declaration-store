@@ -1,0 +1,1740 @@
+openapi: 3.0.3
+info:
+  title: Safety and security import control entry summary declarations
+  contact: {}
+  version: '1.0'
+servers:
+  - url: https://test-api.service.hmrc.gov.uk
+    description: Sandbox
+  - url: https://api.service.hmrc.gov.uk
+    description: Production
+tags:
+  - name: customs
+    description: ''
+paths:
+  /customs/imports/declarations/:
+    post:
+      tags:
+        - customs
+      summary: Submit a new entry summary declaration (ENS)
+      description: |
+        This endpoint allows a developer to create a new entry summary (IE315) declaration.  
+        A correlation ID is returned in the XML response.
+      operationId: Submitanewentrysummarydeclaration(ENS)
+      parameters:
+        - name: Content-Type
+          in: header
+          description: |
+            Specifies the format of the request body, which must be XML.
+
+            For example: application/xml; charset=UTF-8
+          style: simple
+          schema: &ref_0
+            type: string
+            enum:
+              - application/xml; charset=UTF-8
+          required: true
+        - name: Accept
+          in: header
+          description: |
+            Specifies the response format and the [version](/api-documentation/docs/reference-guide#versioning) of the API to be used.
+
+            For example: application/vnd.hmrc.1.0+xml"
+          schema: &ref_1
+            type: string
+            enum:
+              - application/vnd.hmrc.1.0+xml
+          required: true
+        - name: Authorization
+          in: header
+          description: |
+            An [OAuth 2.0 Bearer Token](/api-documentation/docs/authorisation/user-restricted-endpoints) with the write:import-control-system scope.
+
+            For example: Bearer bb7fed3fe10dd235a2ccda3d50fb
+          schema: &ref_2
+            type: string
+            enum:
+              - Bearer bb7fed3fe10dd235a2ccda3d50fb
+          required: true
+      requestBody:
+        description: |
+          The body of the request must conform to the CC315A schema:
+
+          [http://ics.dgtaxud.ec/CC315A](/api-documentation/docs/api/download/import-control-entry-declaration-store/1.0/schemas/CC315A-v11-2.xsd).
+
+          This schema imports a number of other schemas:
+
+          * [http://ics.dgtaxud.ec/doc](/api-documentation/docs/api/download/import-control-entry-declaration-store/1.0/schemas/doc-v11-2.xsd)
+          * [http://ics.dgtaxud.ec/complex_ics](/api-documentation/docs/api/download/import-control-entry-declaration-store/1.0/schemas/complex_types_ics-v11-2.xsd)
+          * [http://ics.dgtaxud.ec/simple](/api-documentation/docs/api/download/import-control-entry-declaration-store/1.0/schemas/simple_types-v11-2.xsd)
+          * [http://ics.dgtaxud.ec/tcl](/api-documentation/docs/api/download/import-control-entry-declaration-store/1.0/schemas/tcl-v11-2.xsd)
+
+          The body will be validated against this schema and against a number of business rules.
+
+          A 400 (Bad Request) response will be returned for requests that fail validation. The response body
+          (schema [http://www.govtalk.gov.uk/CM/errorresponse](/api-documentation/docs/api/download/import-control-entry-declaration-store/1.0/schemas/errorresponse-v2.0.xsd))
+          will contain the validation errors found in the request.
+        content:
+          application/xml:
+            schema:
+              allOf:
+                - title: CC315A(request)
+                  required: &ref_35
+                    - CC315A
+                  type: object
+                  properties: &ref_36
+                    CC315A:
+                      allOf:
+                        - title: CC315A
+                          required: &ref_23
+                            - MesSenMES3
+                            - DatOfPreMES9
+                            - TimOfPreMES10
+                            - MesIdeMES19
+                            - MesTypMES20
+                            - HEAHEA
+                            - TRACONCE1
+                            - GOOITEGDS
+                            - ITI
+                            - PERLODSUMDEC
+                            - CUSOFFFENT730
+                          type: object
+                          properties: &ref_24
+                            MesSenMES3:
+                              type: string
+                              xml:
+                                name: MesSenMES3
+                                namespace: ''
+                                attribute: false
+                                wrapped: false
+                            DatOfPreMES9:
+                              type: string
+                              xml:
+                                name: DatOfPreMES9
+                                namespace: ''
+                                attribute: false
+                                wrapped: false
+                            TimOfPreMES10:
+                              type: string
+                              xml:
+                                name: TimOfPreMES10
+                                namespace: ''
+                                attribute: false
+                                wrapped: false
+                            MesIdeMES19:
+                              type: string
+                              xml:
+                                name: MesIdeMES19
+                                namespace: ''
+                                attribute: false
+                                wrapped: false
+                            MesTypMES20:
+                              type: string
+                              xml:
+                                name: MesTypMES20
+                                namespace: ''
+                                attribute: false
+                                wrapped: false
+                            HEAHEA:
+                              allOf:
+                                - title: HEAHEA
+                                  required:
+                                    - RefNumHEA4
+                                    - TraModAtBorHEA76
+                                    - TotGroMasHEA307
+                                    - ComRefNumHEA
+                                    - ConRefNumHEA
+                                    - DecDatTimHEA114
+                                  type: object
+                                  properties:
+                                    RefNumHEA4:
+                                      type: string
+                                      xml:
+                                        name: RefNumHEA4
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    TraModAtBorHEA76:
+                                      type: integer
+                                      format: int32
+                                      xml:
+                                        name: TraModAtBorHEA76
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    IdeOfMeaOfTraCroHEA85:
+                                      type: string
+                                      xml:
+                                        name: IdeOfMeaOfTraCroHEA85
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    IdeOfMeaOfTraCroHEA85LNG:
+                                      type: string
+                                      xml:
+                                        name: IdeOfMeaOfTraCroHEA85LNG
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    NatOfMeaOfTraCroHEA87:
+                                      type: string
+                                      xml:
+                                        name: NatOfMeaOfTraCroHEA87
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    TotNumOfIteHEA305:
+                                      type: integer
+                                      format: int32
+                                      xml:
+                                        name: TotNumOfIteHEA305
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    TotNumOfPacHEA306:
+                                      type: integer
+                                      format: int32
+                                      xml:
+                                        name: TotNumOfPacHEA306
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    TotGroMasHEA307:
+                                      type: number
+                                      xml:
+                                        name: TotGroMasHEA307
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    DecPlaHEA394:
+                                      type: string
+                                      xml:
+                                        name: DecPlaHEA394
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    DecPlaHEA394LNG:
+                                      type: string
+                                      xml:
+                                        name: DecPlaHEA394LNG
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    SpeCirIndHEA1:
+                                      type: string
+                                      xml:
+                                        name: SpeCirIndHEA1
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    TraChaMetOfPayHEA1:
+                                      type: string
+                                      xml:
+                                        name: TraChaMetOfPayHEA1
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    ComRefNumHEA:
+                                      type: string
+                                      xml:
+                                        name: ComRefNumHEA
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    ConRefNumHEA:
+                                      type: string
+                                      xml:
+                                        name: ConRefNumHEA
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    PlaLoaGOOITE334:
+                                      type: string
+                                      xml:
+                                        name: PlaLoaGOOITE334
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    PlaLoaGOOITE334LNG:
+                                      type: string
+                                      xml:
+                                        name: PlaLoaGOOITE334LNG
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    PlaUnlGOOITE334:
+                                      type: string
+                                      xml:
+                                        name: PlaUnlGOOITE334
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    CodPlUnHEA357LNG:
+                                      type: string
+                                      xml:
+                                        name: CodPlUnHEA357LNG
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    DecDatTimHEA114:
+                                      type: string
+                                      format: date-time
+                                      xml:
+                                        name: DecDatTimHEA114
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                  xml:
+                                    name: HEAHEA
+                                    namespace: ''
+                                    attribute: false
+                                    wrapped: false
+                                - xml:
+                                    name: HEAHEA
+                                    namespace: ''
+                                    attribute: false
+                                    wrapped: false
+                            TRACONCE1:
+                              allOf:
+                                - title: TRACONCE1
+                                  required: &ref_3
+                                    - TINCE159
+                                  type: object
+                                  properties: &ref_4
+                                    TINCE159:
+                                      type: string
+                                      xml:
+                                        name: TINCE159
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                  xml: &ref_5
+                                    name: TRACONCE1
+                                    namespace: ''
+                                    attribute: false
+                                    wrapped: false
+                                - xml:
+                                    name: TRACONCE1
+                                    namespace: ''
+                                    attribute: false
+                                    wrapped: false
+                            GOOITEGDS:
+                              allOf:
+                                - title: GOOITEGDS
+                                  required: &ref_26
+                                    - IteNumGDS7
+                                    - PRODOCDC2
+                                    - PACGS2
+                                  type: object
+                                  properties: &ref_27
+                                    IteNumGDS7:
+                                      type: integer
+                                      format: int32
+                                      xml:
+                                        name: IteNumGDS7
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    PRODOCDC2:
+                                      allOf:
+                                        - title: PRODOCDC2
+                                          required:
+                                            - DocTypDC21
+                                            - DocRefDC23
+                                          type: object
+                                          properties:
+                                            DocTypDC21:
+                                              type: string
+                                              xml:
+                                                name: DocTypDC21
+                                                namespace: ''
+                                                attribute: false
+                                                wrapped: false
+                                            DocRefDC23:
+                                              type: string
+                                              xml:
+                                                name: DocRefDC23
+                                                namespace: ''
+                                                attribute: false
+                                                wrapped: false
+                                          xml:
+                                            name: PRODOCDC2
+                                            namespace: ''
+                                            attribute: false
+                                            wrapped: false
+                                        - xml:
+                                            name: PRODOCDC2
+                                            namespace: ''
+                                            attribute: false
+                                            wrapped: false
+                                    COMCODGODITM:
+                                      allOf:
+                                        - title: COMCODGODITM
+                                          required:
+                                            - ComNomCMD1
+                                          type: object
+                                          properties:
+                                            ComNomCMD1:
+                                              type: integer
+                                              format: int32
+                                              xml:
+                                                name: ComNomCMD1
+                                                namespace: ''
+                                                attribute: false
+                                                wrapped: false
+                                          xml:
+                                            name: COMCODGODITM
+                                            namespace: ''
+                                            attribute: false
+                                            wrapped: false
+                                        - xml:
+                                            name: COMCODGODITM
+                                            namespace: ''
+                                            attribute: false
+                                            wrapped: false
+                                    PACGS2:
+                                      allOf:
+                                        - title: PACGS2
+                                          required:
+                                            - KinOfPacGS23
+                                          type: object
+                                          properties:
+                                            KinOfPacGS23:
+                                              type: string
+                                              xml:
+                                                name: KinOfPacGS23
+                                                namespace: ''
+                                                attribute: false
+                                                wrapped: false
+                                          xml:
+                                            name: PACGS2
+                                            namespace: ''
+                                            attribute: false
+                                            wrapped: false
+                                        - xml:
+                                            name: PACGS2
+                                            namespace: ''
+                                            attribute: false
+                                            wrapped: false
+                                  xml: &ref_28
+                                    name: GOOITEGDS
+                                    namespace: ''
+                                    attribute: false
+                                    wrapped: false
+                                - xml:
+                                    name: GOOITEGDS
+                                    namespace: ''
+                                    attribute: false
+                                    wrapped: false
+                            ITI:
+                              type: array
+                              items:
+                                title: ITI
+                                required: &ref_6
+                                  - CouOfRouCodITI1
+                                type: object
+                                properties: &ref_7
+                                  CouOfRouCodITI1:
+                                    type: string
+                                    xml:
+                                      name: CouOfRouCodITI1
+                                      namespace: ''
+                                      attribute: false
+                                      wrapped: false
+                                xml: &ref_8
+                                  name: ITI
+                                  namespace: ''
+                                  attribute: false
+                                  wrapped: false
+                              description: ''
+                              xml:
+                                namespace: ''
+                                attribute: false
+                                wrapped: false
+                            PERLODSUMDEC:
+                              allOf:
+                                - title: PERLODSUMDEC
+                                  required: &ref_9
+                                    - TINPLD1
+                                  type: object
+                                  properties: &ref_10
+                                    TINPLD1:
+                                      type: string
+                                      xml:
+                                        name: TINPLD1
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                  xml: &ref_11
+                                    name: PERLODSUMDEC
+                                    namespace: ''
+                                    attribute: false
+                                    wrapped: false
+                                - xml:
+                                    name: PERLODSUMDEC
+                                    namespace: ''
+                                    attribute: false
+                                    wrapped: false
+                            CUSOFFFENT730:
+                              allOf:
+                                - title: CUSOFFFENT730
+                                  required: &ref_12
+                                    - RefNumCUSOFFFENT731
+                                    - ExpDatOfArrFIRENT733
+                                  type: object
+                                  properties: &ref_13
+                                    RefNumCUSOFFFENT731:
+                                      type: string
+                                      xml:
+                                        name: RefNumCUSOFFFENT731
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    ExpDatOfArrFIRENT733:
+                                      type: string
+                                      format: date-time
+                                      xml:
+                                        name: ExpDatOfArrFIRENT733
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                - xml:
+                                    name: CUSOFFFENT730
+                                    namespace: ''
+                                    attribute: false
+                                    wrapped: false
+                            CUSOFFSENT740:
+                              allOf:
+                                - title: CUSOFFSENT740
+                                  type: object
+                                  properties: &ref_14
+                                    RefNumSUBENR909:
+                                      type: string
+                                      xml:
+                                        name: RefNumSUBENR909
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                  xml: &ref_15
+                                    name: CUSOFFSENT740
+                                    namespace: ''
+                                    attribute: false
+                                    wrapped: false
+                                - xml:
+                                    name: CUSOFFSENT740
+                                    namespace: ''
+                                    attribute: false
+                                    wrapped: false
+                          xml: &ref_25
+                            name: CC315A
+                            namespace: http://ics.dgtaxud.ec/CC315A
+                            prefix: ie
+                            attribute: false
+                            wrapped: false
+                        - xml:
+                            namespace: http://ics.dgtaxud.ec/CC315A
+                            prefix: ie
+                - xml:
+                    name: CC315A
+                    attribute: false
+                    wrapped: false
+            examples:
+              cc315RequestExample:
+                description: |
+                  This is an example of a CC315A request:
+                value: |
+                  <ie:CC315A xmlns:ie="http://ics.dgtaxud.ec/CC315A">
+                      <MesSenMES3>GB1234231/1234567890</MesSenMES3>
+                      <DatOfPreMES9>091231</DatOfPreMES9>
+                      <TimOfPreMES10>2359</TimOfPreMES10>
+                      <MesIdeMES19>ABCD1234</MesIdeMES19>
+                      <MesTypMES20>CC315A</MesTypMES20>
+                      <HEAHEA>
+                          <RefNumHEA4>ABCD1234</RefNumHEA4>
+                          <TraModAtBorHEA76>4</TraModAtBorHEA76>
+                          <TotNumOfIteHEA305>1</TotNumOfIteHEA305>
+                          <TotNumOfPacHEA306>1</TotNumOfPacHEA306>
+                          <TotGroMasHEA307>1.000</TotGroMasHEA307>
+                          <DecPlaHEA394>EXAMPLE</DecPlaHEA394>
+                          <ComRefNumHEA>ABC1234D</ComRefNumHEA>
+                          <ConRefNumHEA>ABC1234D</ConRefNumHEA>
+                          <PlaLoaGOOITE334>EXAMPLE</PlaLoaGOOITE334>
+                          <PlaUnlGOOITE334>EXAMPLE</PlaUnlGOOITE334>
+                          <DecDatTimHEA114>200912312359</DecDatTimHEA114>
+                      </HEAHEA>
+                      <TRACONCE1>
+                          <TINCE159>GBab12</TINCE159>
+                      </TRACONCE1>
+                      <GOOITEGDS>
+                          <IteNumGDS7>1</IteNumGDS7>
+                          <PRODOCDC2>
+                              <DocTypDC21>AB12</DocTypDC21>
+                              <DocRefDC23>ABCDEF123456</DocRefDC23>
+                          </PRODOCDC2>
+                          <COMCODGODITM>
+                              <ComNomCMD1>1234</ComNomCMD1>
+                          </COMCODGODITM>
+                          <PACGS2>
+                              <KinOfPacGS23>VR</KinOfPacGS23>
+                          </PACGS2>
+                      </GOOITEGDS>
+                      <ITI>
+                          <CouOfRouCodITI1>AB</CouOfRouCodITI1>
+                      </ITI>
+                      <ITI>
+                          <CouOfRouCodITI1>AB</CouOfRouCodITI1>
+                      </ITI>
+                      <PERLODSUMDEC>
+                          <TINPLD1>GBCD12345EFG</TINPLD1>
+                      </PERLODSUMDEC>
+                      <CUSOFFFENT730>
+                          <RefNumCUSOFFFENT731>ABCD1234</RefNumCUSOFFFENT731>
+                          <ExpDatOfArrFIRENT733>200912312359</ExpDatOfArrFIRENT733>
+                      </CUSOFFFENT730>
+                  </ie:CC315A>
+              cc315FullRequestExample:
+                description: |
+                  This is a full example of a CC315A request:
+                value: |-
+                  <ie:CC315A xmlns:ie="http://ics.dgtaxud.ec/CC315A">
+                      <MesSenMES3>myeori/mybranch</MesSenMES3>
+                      <MesRecMES6>receiver</MesRecMES6>
+                      <DatOfPreMES9>030211</DatOfPreMES9>
+                      <TimOfPreMES10>0123</TimOfPreMES10>
+                      <MesIdeMES19>messIde</MesIdeMES19>
+                      <MesTypMES20>CC315A</MesTypMES20>
+                      <CorIdeMES25>NOTUSED</CorIdeMES25>
+                      <HEAHEA>
+                          <RefNumHEA4>refnum</RefNumHEA4>
+                          <TraModAtBorHEA76>2</TraModAtBorHEA76>
+                          <IdeOfMeaOfTraCroHEA85>Identity</IdeOfMeaOfTraCroHEA85>
+                          <IdeOfMeaOfTraCroHEA85LNG>EN</IdeOfMeaOfTraCroHEA85LNG>
+                          <NatOfMeaOfTraCroHEA87>GB</NatOfMeaOfTraCroHEA87>
+                          <TotNumOfIteHEA305>1</TotNumOfIteHEA305>
+                          <TotNumOfPacHEA306>2</TotNumOfPacHEA306>
+                          <TotGroMasHEA307>3</TotGroMasHEA307>
+                          <DecPlaHEA394>declarationplace</DecPlaHEA394>
+                          <DecPlaHEA394LNG>en</DecPlaHEA394LNG>
+                          <SpeCirIndHEA1>A</SpeCirIndHEA1>
+                          <TraChaMetOfPayHEA1>C</TraChaMetOfPayHEA1>
+                          <ComRefNumHEA>commercialRefNum</ComRefNumHEA>
+                          <ConRefNumHEA>conveyanceRefNum</ConRefNumHEA>
+                          <PlaLoaGOOITE334>Place of loading</PlaLoaGOOITE334>
+                          <PlaLoaGOOITE334LNG>en</PlaLoaGOOITE334LNG>
+                          <PlaUnlGOOITE334>Place of unloading</PlaUnlGOOITE334>
+                          <CodPlUnHEA357LNG>EN</CodPlUnHEA357LNG>
+                          <DecDatTimHEA114>200302111234</DecDatTimHEA114>
+                      </HEAHEA>
+                      <TRACONCO1>
+                          <NamCO17>consignor name</NamCO17>
+                          <StrAndNumCO122>consignor street</StrAndNumCO122>
+                          <PosCodCO123>consignor</PosCodCO123>
+                          <CitCO124>consignor city</CitCO124>
+                          <CouCO125>EN</CouCO125>
+                          <NADLNGCO>en</NADLNGCO>
+                      </TRACONCO1>
+                      <TRACONCE1>
+                          <NamCE17>consignee name</NamCE17>
+                          <StrAndNumCE122>consignee street</StrAndNumCE122>
+                          <PosCodCE123>consignee</PosCodCE123>
+                          <CitCE124>consignee city</CitCE124>
+                          <CouCE125>EN</CouCE125>
+                          <NADLNGCE>en</NADLNGCE>
+                      </TRACONCE1>
+                      <NOTPAR670>
+                          <NamNOTPAR672>notify party name</NamNOTPAR672>
+                          <StrNumNOTPAR673>notify party street</StrNumNOTPAR673>
+                          <PosCodNOTPAR676>notify</PosCodNOTPAR676>
+                          <CitNOTPAR674>notify party city</CitNOTPAR674>
+                          <CouCodNOTPAR675>EN</CouCodNOTPAR675>
+                          <NOTPAR670LNG>en</NOTPAR670LNG>
+                      </NOTPAR670>
+                      <GOOITEGDS>
+                          <IteNumGDS7>42</IteNumGDS7>
+                          <GooDesGDS23>Goods description</GooDesGDS23>
+                          <GooDesGDS23LNG>es</GooDesGDS23LNG>
+                          <GroMasGDS46>123.456</GroMasGDS46>
+                          <MetOfPayGDI12>A</MetOfPayGDI12>
+                          <ComRefNumGIM1>Commercial Reference Number</ComRefNumGIM1>
+                          <UNDanGooCodGDI1>undg</UNDanGooCodGDI1>
+                          <PlaLoaGOOITE333>Place of loading</PlaLoaGOOITE333>
+                          <PlaLoaGOOITE333LNG>en</PlaLoaGOOITE333LNG>
+                          <PlaUnlGOOITE333>Place of unloading</PlaUnlGOOITE333>
+                          <PlaUnlGOOITE333LNG>es</PlaUnlGOOITE333LNG>
+                          <PRODOCDC2>
+                              <DocTypDC21>type</DocTypDC21>
+                              <DocRefDC23>Document reference</DocRefDC23>
+                              <DocRefDCLNG>es</DocRefDCLNG>
+                          </PRODOCDC2>
+                          <PRODOCDC2>
+                              <DocTypDC21>typ2</DocTypDC21>
+                              <DocRefDC23>Document reference2</DocRefDC23>
+                              <DocRefDCLNG>en</DocRefDCLNG>
+                          </PRODOCDC2>
+                          <SPEMENMT2>
+                              <AddInfCodMT23>123</AddInfCodMT23>
+                          </SPEMENMT2>
+                          <SPEMENMT2>
+                              <AddInfCodMT23>1234</AddInfCodMT23>
+                          </SPEMENMT2>
+                          <TRACONCO2>
+                              <NamCO27>consignor goods name</NamCO27>
+                              <StrAndNumCO222>consignor goods street</StrAndNumCO222>
+                              <PosCodCO223>consignor</PosCodCO223>
+                              <CitCO224>consignor goods city</CitCO224>
+                              <CouCO225>EN</CouCO225>
+                              <NADLNGGTCO>en</NADLNGGTCO>
+                          </TRACONCO2>
+                          <COMCODGODITM>
+                              <ComNomCMD1>comco</ComNomCMD1>
+                          </COMCODGODITM>
+                          <TRACONCE2>
+                              <NamCE27>consignee goods name</NamCE27>
+                              <StrAndNumCE222>consignee goods street</StrAndNumCE222>
+                              <PosCodCE223>consignee</PosCodCE223>
+                              <CitCE224>consignee goods city</CitCE224>
+                              <CouCE225>EN</CouCE225>
+                              <NADLNGGICE>en</NADLNGGICE>
+                          </TRACONCE2>
+                          <CONNR2>
+                              <ConNumNR21>Container 1</ConNumNR21>
+                          </CONNR2>
+                          <CONNR2>
+                              <ConNumNR21>Container 2</ConNumNR21>
+                          </CONNR2>
+                          <IDEMEATRAGI970>
+                              <NatIDEMEATRAGI973>gb</NatIDEMEATRAGI973>
+                              <IdeMeaTraGIMEATRA971>Identity of motcb</IdeMeaTraGIMEATRA971>
+                              <IdeMeaTraGIMEATRA972LNG>en</IdeMeaTraGIMEATRA972LNG>
+                          </IDEMEATRAGI970>
+                          <PACGS2>
+                              <KinOfPacGS23>ab</KinOfPacGS23>
+                              <NumOfPacGS24>100</NumOfPacGS24>
+                              <NumOfPieGS25>100</NumOfPieGS25>
+                              <MarNumOfPacGSL21>Marks numbers of packages (long)</MarNumOfPacGSL21>
+                              <MarNumOfPacGSL21LNG>en</MarNumOfPacGSL21LNG>
+                          </PACGS2>
+                          <PACGS2>
+                              <KinOfPacGS23>ab</KinOfPacGS23>
+                              <NumOfPacGS24>1002</NumOfPacGS24>
+                              <NumOfPieGS25>1002</NumOfPieGS25>
+                              <MarNumOfPacGSL21>Marks numbers of packages (long)2</MarNumOfPacGSL21>
+                              <MarNumOfPacGSL21LNG>es</MarNumOfPacGSL21LNG>
+                          </PACGS2>
+                          <PRTNOT640>
+                              <NamPRTNOT642>notify party goods name</NamPRTNOT642>
+                              <StrNumPRTNOT646>notify party goods street</StrNumPRTNOT646>
+                              <PstCodPRTNOT644>notify</PstCodPRTNOT644>
+                              <CtyPRTNOT643>notify party goods city</CtyPRTNOT643>
+                              <CouCodGINOT647>EN</CouCodGINOT647>
+                              <PRTNOT640LNG>en</PRTNOT640LNG>
+                          </PRTNOT640>
+                      </GOOITEGDS>
+                      <ITI>
+                          <CouOfRouCodITI1>AA</CouOfRouCodITI1>
+                      </ITI>
+                      <ITI>
+                          <CouOfRouCodITI1>BB</CouOfRouCodITI1>
+                      </ITI>
+                      <CUSOFFLON>
+                          <RefNumCOL1>offOfLog</RefNumCOL1>
+                      </CUSOFFLON>
+                      <TRAREP>
+                          <NamTRE1>representative name</NamTRE1>
+                          <StrAndNumTRE1>representative street</StrAndNumTRE1>
+                          <PosCodTRE1>represent</PosCodTRE1>
+                          <CitTRE1>representative city</CitTRE1>
+                          <CouCodTRE1>EN</CouCodTRE1>
+                          <TRAREPLNG>en</TRAREPLNG>
+                      </TRAREP>
+                      <PERLODSUMDEC>
+                          <NamPLD1>declarant name</NamPLD1>
+                          <StrAndNumPLD1>declarant street</StrAndNumPLD1>
+                          <PosCodPLD1>declarant</PosCodPLD1>
+                          <CitPLD1>declarant city</CitPLD1>
+                          <CouCodPLD1>EN</CouCodPLD1>
+                          <PERLODSUMDECLNG>en</PERLODSUMDECLNG>
+                      </PERLODSUMDEC>
+                      <SEAID529>
+                          <SeaIdSEAID530>Seals identity</SeaIdSEAID530>
+                          <SeaIdSEAID530LNG>en</SeaIdSEAID530LNG>
+                      </SEAID529>
+                      <SEAID529>
+                          <SeaIdSEAID530>Seals identity2</SeaIdSEAID530>
+                          <SeaIdSEAID530LNG>es</SeaIdSEAID530LNG>
+                      </SEAID529>
+                      <CUSOFFFENT730>
+                          <RefNumCUSOFFFENT731>AB3C4D5E</RefNumCUSOFFFENT731>
+                          <ExpDatOfArrFIRENT733>200302111234</ExpDatOfArrFIRENT733>
+                      </CUSOFFFENT730>
+                      <CUSOFFSENT740>
+                          <RefNumSUBENR909>office01</RefNumSUBENR909>
+                      </CUSOFFSENT740>
+                      <CUSOFFSENT740>
+                          <RefNumSUBENR909>office02</RefNumSUBENR909>
+                      </CUSOFFSENT740>
+                      <TRACARENT601>
+                          <NamTRACARENT604>carrier name</NamTRACARENT604>
+                          <StrNumTRACARENT607>carrier street</StrNumTRACARENT607>
+                          <PstCodTRACARENT606>carrier</PstCodTRACARENT606>
+                          <CtyTRACARENT603>carrier city</CtyTRACARENT603>
+                          <CouCodTRACARENT605>EN</CouCodTRACARENT605>
+                          <TRACARENT601LNG>en</TRACARENT601LNG>
+                      </TRACARENT601>
+                  </ie:CC315A>
+              cc315ReducedRequestExample:
+                description: |
+                  This is a reduced example of a CC315A request:
+                value: |
+                  <ie:CC315A xmlns:ie="http://ics.dgtaxud.ec/CC315A">
+                      <MesSenMES3>eori/branch</MesSenMES3>
+                      <MesRecMES6>ABCD1234</MesRecMES6>
+                      <DatOfPreMES9>091231</DatOfPreMES9>
+                      <TimOfPreMES10>2359</TimOfPreMES10>
+                      <MesIdeMES19>ABCD1234</MesIdeMES19>
+                      <MesTypMES20>CC315A</MesTypMES20>
+                      <HEAHEA>
+                          <RefNumHEA4>ABCD1234</RefNumHEA4>
+                          <TraModAtBorHEA76>2</TraModAtBorHEA76>
+                          <TotGroMasHEA307>1.000</TotGroMasHEA307>
+                          <ComRefNumHEA>ABC1234D</ComRefNumHEA>
+                          <PlaLoaGOOITE334>EXAMPLE</PlaLoaGOOITE334>
+                          <PlaUnlGOOITE334>EXAMPLE</PlaUnlGOOITE334>
+                          <DecDatTimHEA114>200912312359</DecDatTimHEA114>
+                      </HEAHEA>
+                      <TRACONCE1>
+                          <TINCE159>GBab12</TINCE159>
+                      </TRACONCE1>
+                      <GOOITEGDS>
+                          <IteNumGDS7>1</IteNumGDS7>
+                          <PRODOCDC2>
+                              <DocTypDC21>AB12</DocTypDC21>
+                              <DocRefDC23>ABCDEF123456</DocRefDC23>
+                          </PRODOCDC2>
+                          <COMCODGODITM>
+                              <ComNomCMD1>1234</ComNomCMD1>
+                          </COMCODGODITM>
+                          <IDEMEATRAGI970>
+                              <NatIDEMEATRAGI973>AB</NatIDEMEATRAGI973>
+                              <IdeMeaTraGIMEATRA971>000123</IdeMeaTraGIMEATRA971>
+                          </IDEMEATRAGI970>
+                          <PACGS2>
+                              <KinOfPacGS23>VR</KinOfPacGS23>
+                          </PACGS2>
+                      </GOOITEGDS>
+                      <ITI>
+                          <CouOfRouCodITI1>AB</CouOfRouCodITI1>
+                      </ITI>
+                      <ITI>
+                          <CouOfRouCodITI1>AB</CouOfRouCodITI1>
+                      </ITI>
+                      <PERLODSUMDEC>
+                          <TINPLD1>GBCD12345EFG</TINPLD1>
+                      </PERLODSUMDEC>
+                      <CUSOFFFENT730>
+                          <RefNumCUSOFFFENT731>ABCD1234</RefNumCUSOFFFENT731>
+                          <ExpDatOfArrFIRENT733>200912312359</ExpDatOfArrFIRENT733>
+                      </CUSOFFFENT730>
+                  </ie:CC315A>
+        required: true
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/xml:
+              schema:
+                allOf:
+                  - title: OK
+                    required: &ref_16
+                      - SuccessResponse
+                    type: object
+                    properties: &ref_17
+                      SuccessResponse:
+                        allOf:
+                          - title: SuccessResponse
+                            required: &ref_32
+                              - ResponseData
+                            type: object
+                            properties: &ref_33
+                              ResponseData:
+                                allOf:
+                                  - title: ResponseData
+                                    required:
+                                      - CorrelationId
+                                    type: object
+                                    properties:
+                                      CorrelationId:
+                                        type: integer
+                                        format: int64
+                                        xml:
+                                          name: CorrelationId
+                                          namespace: http://www.govtalk.gov.uk/enforcement/ICS/responsedata/7
+                                          attribute: false
+                                          wrapped: false
+                                    xml:
+                                      name: ResponseData
+                                      namespace: http://www.hmrc.gov.uk/successresponse/2
+                                      prefix: ns
+                                      attribute: false
+                                      wrapped: false
+                                  - xml:
+                                      name: ResponseData
+                                      namespace: http://www.hmrc.gov.uk/successresponse/2
+                                      prefix: ns
+                                      attribute: false
+                                      wrapped: false
+                            xml: &ref_34
+                              name: SuccessResponse
+                              namespace: http://www.hmrc.gov.uk/successresponse/2
+                              prefix: ns
+                              attribute: false
+                              wrapped: false
+              examples:
+                validResponseExample:
+                  description: |
+                    A success response (schema [http://www.hmrc.gov.uk/successresponse/2](https://developer.service.hmrc.gov.uk/api-documentation/docs/api/download/import-control-entry-declaration-store/1.0/schemas/SuccessResponse-v2-0.xsd)) contains the correlation ID used to track the submission.
+                    This is an example response:
+                  value: |
+                    <ns:SuccessResponse xmlns:xd="http://www.w3.org/2000/09/xmldsig#" xmlns:ns="http://www.hmrc.gov.uk/successresponse/2"
+
+                    xmlns="http://www.govtalk.gov.uk/enforcement/ICS/responsedata/7">
+                      <ns:ResponseData>
+                        <CorrelationId>87491122139921</CorrelationId>
+                      </ns:ResponseData>
+                    </ns:SuccessResponse>
+        '403':
+          description: FORBIDDEN
+          headers: {}
+          content:
+            application/xml:
+              schema:
+                allOf:
+                  - title: Forbidden
+                    required: &ref_18
+                      - error
+                    type: object
+                    properties: &ref_19
+                      error:
+                        allOf:
+                          - title: error
+                            required:
+                              - code
+                              - message
+                            type: object
+                            properties:
+                              code:
+                                description: The error code
+                                type: string
+                              message:
+                                description: The error message
+                                type: string
+              examples:
+                notAuthorisedExample:
+                  description: |
+                    The client is not authorised to make the ENS submission.  This is normally because the EORI in the submission does not match the EORI under which the trader or CSP has been enroled.
+                  value: |
+                    <error>
+                       <code>FORBIDDEN</code>
+                       <message>Permission denied</message>
+                    </error>
+      deprecated: false
+      security:
+        - User-Restricted:
+            - write:import-control-system
+  /customs/imports/declarations/{movement-reference-number}:
+    put:
+      tags:
+        - customs
+      summary: Amend an existing entry summary declaration (ENS)
+      description: |
+        This endpoint allows a developer to amend an existing ENS submission. You will need to provide the movement reference number when you created the original ENS. A correlation ID will be returned in the XML response.
+      operationId: Amendanexistingentrysummarydeclaration(ENS)
+      parameters:
+        - name: movement-reference-number
+          in: path
+          description: The Movement Reference Number obtained as part of a successful outcome for the ENS to be amended.
+          style: simple
+          schema:
+            type: string
+          required: true
+        - name: Content-Type
+          in: header
+          description: |
+            Specifies the format of the request body, which must be XML.
+
+            For example: application/xml; charset=UTF-8
+          style: simple
+          schema: *ref_0
+          required: true
+        - name: Accept
+          in: header
+          description: |
+            Specifies the response format and the [version](/api-documentation/docs/reference-guide#versioning) of the API to be used.
+
+            For example: application/vnd.hmrc.1.0+xml"
+          schema: *ref_1
+          required: true
+        - name: Authorization
+          in: header
+          description: |
+            An [OAuth 2.0 Bearer Token](/api-documentation/docs/authorisation/user-restricted-endpoints) with the write:import-control-system scope.
+
+            For example: Bearer bb7fed3fe10dd235a2ccda3d50fb
+          schema: *ref_2
+          required: true
+      requestBody:
+        description: |
+          The body of the request must conform to the CC313A schema:
+          [http://ics.dgtaxud.ec/CC313A](/api-documentation/docs/api/download/import-control-entry-declaration-store/1.0/schemas/CC313A-v11-2.xsd).
+
+          This schema imports a number of other schemas:
+
+          * [http://ics.dgtaxud.ec/doc](/api-documentation/docs/api/download/import-control-entry-declaration-store/1.0/schemas/doc-v11-2.xsd)
+          * [http://ics.dgtaxud.ec/complex_ics](/api-documentation/docs/api/download/import-control-entry-declaration-store/1.0/schemas/complex_types_ics-v11-2.xsd)
+          * [http://ics.dgtaxud.ec/simple](/api-documentation/docs/api/download/import-control-entry-declaration-store/1.0/schemas/simple_types-v11-2.xsd)
+          * [http://ics.dgtaxud.ec/tcl](/api-documentation/docs/api/download/import-control-entry-declaration-store/1.0/schemas/tcl-v11-2.xsd)
+
+          The body will be validated against this schema and against a number of business rules.
+
+          A 400 (Bad Request) response will be returned for requests that fail validation. The response body
+          (schema [http://www.govtalk.gov.uk/CM/errorresponse](/api-documentation/docs/api/download/import-control-entry-declaration-store/1.0/schemas/errorresponse-v2.0.xsd))
+          will contain the validation errors found in the request.
+        content:
+          application/xml:
+            schema:
+              allOf:
+                - title: CC313A(request)
+                  required: &ref_37
+                    - CC313A
+                  type: object
+                  properties: &ref_38
+                    CC313A:
+                      allOf:
+                        - title: CC313A
+                          required: &ref_20
+                            - MesSenMES3
+                            - DatOfPreMES9
+                            - TimOfPreMES10
+                            - MesIdeMES19
+                            - MesTypMES20
+                            - HEAHEA
+                            - TRACONCO1
+                            - TRACONCE1
+                            - GOOITEGDS
+                            - ITI
+                            - PERLODSUMDEC
+                            - CUSOFFFENT730
+                          type: object
+                          properties: &ref_21
+                            MesSenMES3:
+                              type: string
+                              xml:
+                                name: MesSenMES3
+                                namespace: ''
+                                attribute: false
+                                wrapped: false
+                            DatOfPreMES9:
+                              type: string
+                              xml:
+                                name: DatOfPreMES9
+                                namespace: ''
+                                attribute: false
+                                wrapped: false
+                            TimOfPreMES10:
+                              type: string
+                              xml:
+                                name: TimOfPreMES10
+                                namespace: ''
+                                attribute: false
+                                wrapped: false
+                            MesIdeMES19:
+                              type: string
+                              xml:
+                                name: MesIdeMES19
+                                namespace: ''
+                                attribute: false
+                                wrapped: false
+                            MesTypMES20:
+                              type: string
+                              xml:
+                                name: MesTypMES20
+                                namespace: ''
+                                attribute: false
+                                wrapped: false
+                            HEAHEA:
+                              allOf:
+                                - title: HEAHEA1
+                                  required:
+                                    - DocNumHEA5
+                                    - TraModAtBorHEA76
+                                    - TotGroMasHEA307
+                                    - ComRefNumHEA
+                                    - ConRefNumHEA
+                                    - DatTimAmeHEA113
+                                  type: object
+                                  properties:
+                                    DocNumHEA5:
+                                      type: string
+                                      xml:
+                                        name: DocNumHEA5
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    TraModAtBorHEA76:
+                                      type: integer
+                                      format: int32
+                                      xml:
+                                        name: TraModAtBorHEA76
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    IdeOfMeaOfTraCroHEA85:
+                                      type: string
+                                      xml:
+                                        name: IdeOfMeaOfTraCroHEA85
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    IdeOfMeaOfTraCroHEA85LNG:
+                                      type: string
+                                      xml:
+                                        name: IdeOfMeaOfTraCroHEA85LNG
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    NatOfMeaOfTraCroHEA87:
+                                      type: string
+                                      xml:
+                                        name: NatOfMeaOfTraCroHEA87
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    TotNumOfIteHEA305:
+                                      type: integer
+                                      format: int32
+                                      xml:
+                                        name: TotNumOfIteHEA305
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    TotNumOfPacHEA306:
+                                      type: integer
+                                      format: int32
+                                      xml:
+                                        name: TotNumOfPacHEA306
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    TotGroMasHEA307:
+                                      type: number
+                                      xml:
+                                        name: TotGroMasHEA307
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    AmdPlaHEA598:
+                                      type: string
+                                      xml:
+                                        name: AmdPlaHEA598
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    AmdPlaHEA598LNG:
+                                      type: string
+                                      xml:
+                                        name: AmdPlaHEA598LNG
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    SpeCirIndHEA1:
+                                      type: string
+                                      xml:
+                                        name: SpeCirIndHEA1
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    TraChaMetOfPayHEA1:
+                                      type: string
+                                      xml:
+                                        name: TraChaMetOfPayHEA1
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    ComRefNumHEA:
+                                      type: string
+                                      xml:
+                                        name: ComRefNumHEA
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    ConRefNumHEA:
+                                      type: string
+                                      xml:
+                                        name: ConRefNumHEA
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    PlaLoaGOOITE334:
+                                      type: string
+                                      xml:
+                                        name: PlaLoaGOOITE334
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    PlaLoaGOOITE334LNG:
+                                      type: string
+                                      xml:
+                                        name: PlaLoaGOOITE334LNG
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    PlaUnlGOOITE334:
+                                      type: string
+                                      xml:
+                                        name: PlaUnlGOOITE334
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    CodPlUnHEA357LNG:
+                                      type: string
+                                      xml:
+                                        name: CodPlUnHEA357LNG
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    DatTimAmeHEA113:
+                                      type: string
+                                      format: date-time
+                                      xml:
+                                        name: DatTimAmeHEA113
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                  xml:
+                                    name: HEAHEA
+                                    namespace: ''
+                                    attribute: false
+                                    wrapped: false
+                                - xml:
+                                    name: HEAHEA
+                                    namespace: ''
+                                    attribute: false
+                                    wrapped: false
+                            TRACONCO1:
+                              allOf:
+                                - title: TRACONCO1
+                                  required:
+                                    - NamCO17
+                                    - StrAndNumCO122
+                                    - PosCodCO123
+                                    - CitCO124
+                                    - CouCO125
+                                    - NADLNGCO
+                                  type: object
+                                  properties:
+                                    NamCO17:
+                                      type: string
+                                      xml:
+                                        name: NamCO17
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    StrAndNumCO122:
+                                      type: string
+                                      xml:
+                                        name: StrAndNumCO122
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    PosCodCO123:
+                                      type: string
+                                      xml:
+                                        name: PosCodCO123
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    CitCO124:
+                                      type: string
+                                      xml:
+                                        name: CitCO124
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    CouCO125:
+                                      type: string
+                                      xml:
+                                        name: CouCO125
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                    NADLNGCO:
+                                      type: string
+                                      xml:
+                                        name: NADLNGCO
+                                        namespace: ''
+                                        attribute: false
+                                        wrapped: false
+                                  xml:
+                                    name: TRACONCO1
+                                    namespace: ''
+                                    attribute: false
+                                    wrapped: false
+                                - xml:
+                                    name: TRACONCO1
+                                    namespace: ''
+                                    attribute: false
+                                    wrapped: false
+                            TRACONCE1:
+                              allOf:
+                                - title: TRACONCE1
+                                  required: *ref_3
+                                  type: object
+                                  properties: *ref_4
+                                  xml: *ref_5
+                                - xml:
+                                    name: TRACONCE1
+                                    namespace: ''
+                                    attribute: false
+                                    wrapped: false
+                            GOOITEGDS:
+                              type: array
+                              items:
+                                title: GOOITEGDS1
+                                required: &ref_29
+                                  - IteNumGDS7
+                                  - GooDesGDS23
+                                  - PACGS2
+                                type: object
+                                properties: &ref_30
+                                  IteNumGDS7:
+                                    type: integer
+                                    format: int32
+                                    xml:
+                                      name: IteNumGDS7
+                                      namespace: ''
+                                      attribute: false
+                                      wrapped: false
+                                  GooDesGDS23:
+                                    type: string
+                                    xml:
+                                      name: GooDesGDS23
+                                      namespace: ''
+                                      attribute: false
+                                      wrapped: false
+                                  SPEMENMT2:
+                                    allOf:
+                                      - title: SPEMENMT2
+                                        required:
+                                          - AddInfCodMT23
+                                        type: object
+                                        properties:
+                                          AddInfCodMT23:
+                                            type: string
+                                            xml:
+                                              name: AddInfCodMT23
+                                              namespace: ''
+                                              attribute: false
+                                              wrapped: false
+                                        xml:
+                                          name: SPEMENMT2
+                                          namespace: ''
+                                          attribute: false
+                                          wrapped: false
+                                      - xml:
+                                          name: SPEMENMT2
+                                          namespace: ''
+                                          attribute: false
+                                          wrapped: false
+                                  PACGS2:
+                                    allOf:
+                                      - title: PACGS21
+                                        required:
+                                          - KinOfPacGS23
+                                          - NumOfPacGS24
+                                          - MarNumOfPacGSL21
+                                          - MarNumOfPacGSL21LNG
+                                        type: object
+                                        properties:
+                                          KinOfPacGS23:
+                                            type: string
+                                            xml:
+                                              name: KinOfPacGS23
+                                              namespace: ''
+                                              attribute: false
+                                              wrapped: false
+                                          NumOfPacGS24:
+                                            type: integer
+                                            format: int32
+                                            xml:
+                                              name: NumOfPacGS24
+                                              namespace: ''
+                                              attribute: false
+                                              wrapped: false
+                                          MarNumOfPacGSL21:
+                                            type: string
+                                            xml:
+                                              name: MarNumOfPacGSL21
+                                              namespace: ''
+                                              attribute: false
+                                              wrapped: false
+                                          MarNumOfPacGSL21LNG:
+                                            type: string
+                                            xml:
+                                              name: MarNumOfPacGSL21LNG
+                                              namespace: ''
+                                              attribute: false
+                                              wrapped: false
+                                        xml:
+                                          name: PACGS2
+                                          namespace: ''
+                                          attribute: false
+                                          wrapped: false
+                                      - xml:
+                                          name: PACGS2
+                                          namespace: ''
+                                          attribute: false
+                                          wrapped: false
+                                xml: &ref_31
+                                  name: GOOITEGDS
+                                  namespace: ''
+                                  attribute: false
+                                  wrapped: false
+                              description: ''
+                              xml:
+                                namespace: ''
+                                attribute: false
+                                wrapped: false
+                            ITI:
+                              type: array
+                              items:
+                                title: ITI
+                                required: *ref_6
+                                type: object
+                                properties: *ref_7
+                                xml: *ref_8
+                              description: ''
+                              xml:
+                                namespace: ''
+                                attribute: false
+                                wrapped: false
+                            PERLODSUMDEC:
+                              allOf:
+                                - title: PERLODSUMDEC
+                                  required: *ref_9
+                                  type: object
+                                  properties: *ref_10
+                                  xml: *ref_11
+                                - xml:
+                                    name: PERLODSUMDEC
+                                    namespace: ''
+                                    attribute: false
+                                    wrapped: false
+                            CUSOFFFENT730:
+                              allOf:
+                                - title: CUSOFFFENT730
+                                  required: *ref_12
+                                  type: object
+                                  properties: *ref_13
+                                - xml:
+                                    name: CUSOFFFENT730
+                                    namespace: ''
+                                    attribute: false
+                                    wrapped: false
+                            CUSOFFSENT740:
+                              allOf:
+                                - title: CUSOFFSENT740
+                                  type: object
+                                  properties: *ref_14
+                                  xml: *ref_15
+                                - xml:
+                                    name: CUSOFFSENT740
+                                    namespace: ''
+                                    attribute: false
+                                    wrapped: false
+                          xml: &ref_22
+                            name: CC313A
+                            namespace: http://ics.dgtaxud.ec/CC313A
+                            prefix: ie
+                            attribute: false
+                            wrapped: false
+                        - xml:
+                            namespace: http://ics.dgtaxud.ec/CC313A
+                            prefix: ie
+                - xml:
+                    name: CC313A
+                    attribute: false
+                    wrapped: false
+            examples:
+              cc313RequestExample:
+                description: |
+                  This is an example of a CC313A request:
+                value: |
+                  <ie:CC313A xmlns:ie="http://ics.dgtaxud.ec/CC313A">
+                    <MesSenMES3>GBCD1234/1234567890</MesSenMES3>
+                    <DatOfPreMES9>030211</DatOfPreMES9>
+                    <TimOfPreMES10>0123</TimOfPreMES10>
+                    <MesIdeMES19>ABC123</MesIdeMES19>
+                    <MesTypMES20>CC313A</MesTypMES20>
+                    <HEAHEA>
+                      <DocNumHEA5>12AB3C4D5E6F7G8H90</DocNumHEA5>
+                      <TraModAtBorHEA76>1</TraModAtBorHEA76>
+                      <IdeOfMeaOfTraCroHEA85>12345678</IdeOfMeaOfTraCroHEA85>
+                      <TotNumOfIteHEA305>2</TotNumOfIteHEA305>
+                      <TotNumOfPacHEA306>84</TotNumOfPacHEA306>
+                      <AmdPlaHEA598>ABC123</AmdPlaHEA598>
+                      <SpeCirIndHEA1>E</SpeCirIndHEA1>
+                      <TraChaMetOfPayHEA1>A</TraChaMetOfPayHEA1>
+                      <ComRefNumHEA>ABC123</ComRefNumHEA>
+                      <ConRefNumHEA>XFER123-456</ConRefNumHEA>
+                      <PlaLoaGOOITE334>ABC123</PlaLoaGOOITE334>
+                      <PlaLoaGOOITE334LNG>en</PlaLoaGOOITE334LNG>
+                      <PlaUnlGOOITE334>ABC123</PlaUnlGOOITE334>
+                      <CodPlUnHEA357LNG>en</CodPlUnHEA357LNG>
+                      <DatTimAmeHEA113>200302111234</DatTimAmeHEA113>
+                    </HEAHEA>
+                    <TRACONCO1>
+                      <NamCO17>ABC123</NamCO17>
+                      <StrAndNumCO122>ABC123</StrAndNumCO122>
+                      <PosCodCO123>ABC123</PosCodCO123>
+                      <CitCO124>ABC123</CitCO124>
+                      <CouCO125>EN</CouCO125>
+                      <NADLNGCO>en</NADLNGCO>
+                    </TRACONCO1>
+                    <TRACONCE1>
+                      <TINCE159>GB^</TINCE159>
+                    </TRACONCE1>
+                    <GOOITEGDS>
+                      <IteNumGDS7>1</IteNumGDS7>
+                      <GooDesGDS23>ABC123</GooDesGDS23>
+                      <SPEMENMT2>
+                        <AddInfCodMT23>12345</AddInfCodMT23>
+                      </SPEMENMT2>
+                      <PACGS2>
+                        <KinOfPacGS23>AA</KinOfPacGS23>
+                        <NumOfPacGS24>42</NumOfPacGS24>
+                        <MarNumOfPacGSL21>ABC123</MarNumOfPacGSL21>
+                        <MarNumOfPacGSL21LNG>en</MarNumOfPacGSL21LNG>
+                      </PACGS2>
+                    </GOOITEGDS>
+                    <GOOITEGDS>
+                      <IteNumGDS7>2</IteNumGDS7>
+                      <GooDesGDS23>ABC123</GooDesGDS23>
+                      <SPEMENMT2>
+                        <AddInfCodMT23>12345</AddInfCodMT23>
+                      </SPEMENMT2>
+                      <PACGS2>
+                        <KinOfPacGS23>AA</KinOfPacGS23>
+                        <NumOfPacGS24>42</NumOfPacGS24>
+                        <MarNumOfPacGSL21>ABC123</MarNumOfPacGSL21>
+                        <MarNumOfPacGSL21LNG>en</MarNumOfPacGSL21LNG>
+                      </PACGS2>
+                    </GOOITEGDS>
+                    <ITI>
+                      <CouOfRouCodITI1>EN</CouOfRouCodITI1>
+                    </ITI>
+                    <ITI>
+                      <CouOfRouCodITI1>EN</CouOfRouCodITI1>
+                    </ITI>
+                    <PERLODSUMDEC>
+                      <TINPLD1>GBABC</TINPLD1>
+                    </PERLODSUMDEC>
+                    <CUSOFFFENT730>
+                      <RefNumCUSOFFFENT731>AB3C4D5F</RefNumCUSOFFFENT731>
+                      <ExpDatOfArrFIRENT733>200302111234</ExpDatOfArrFIRENT733>
+                    </CUSOFFFENT730>
+                  </ie:CC313A>
+              cc313ReducedRequestExample:
+                description: |
+                  This is a reduced example of a CC313A request:
+                value: |-
+                  <ie:CC313A xmlns:ie="http://ics.dgtaxud.ec/CC313A">
+                      <MesSenMES3>eori/branch</MesSenMES3>
+                      <MesRecMES6>ABC123</MesRecMES6>
+                      <DatOfPreMES9>030211</DatOfPreMES9>
+                      <TimOfPreMES10>0123</TimOfPreMES10>
+                      <MesIdeMES19>ABC123</MesIdeMES19>
+                      <MesTypMES20>CC313A</MesTypMES20>
+                      <HEAHEA>
+                          <DocNumHEA5>mrn</DocNumHEA5>
+                          <TraModAtBorHEA76>11</TraModAtBorHEA76>
+                          <IdeOfMeaOfTraCroHEA85>12345678</IdeOfMeaOfTraCroHEA85>
+                          <SpeCirIndHEA1>E</SpeCirIndHEA1>
+                          <TraChaMetOfPayHEA1>A</TraChaMetOfPayHEA1>
+                          <ComRefNumHEA>ABC123</ComRefNumHEA>
+                          <PlaLoaGOOITE334>ABC123</PlaLoaGOOITE334>
+                          <PlaLoaGOOITE334LNG>en</PlaLoaGOOITE334LNG>
+                          <PlaUnlGOOITE334>ABC123</PlaUnlGOOITE334>
+                          <CodPlUnHEA357LNG>en</CodPlUnHEA357LNG>
+                          <DatTimAmeHEA113>200302111234</DatTimAmeHEA113>
+                      </HEAHEA>
+                      <TRACONCO1>
+                          <NamCO17>ABC123</NamCO17>
+                          <StrAndNumCO122>ABC123</StrAndNumCO122>
+                          <PosCodCO123>ABC123</PosCodCO123>
+                          <CitCO124>ABC123</CitCO124>
+                          <CouCO125>EN</CouCO125>
+                          <NADLNGCO>en</NADLNGCO>
+                      </TRACONCO1>
+                      <TRACONCE1>
+                          <TINCE159>GB^</TINCE159>
+                      </TRACONCE1>
+                      <GOOITEGDS>
+                          <IteNumGDS7>1</IteNumGDS7>
+                          <GooDesGDS23>ABC123</GooDesGDS23>
+                          <SPEMENMT2>
+                              <AddInfCodMT23>12345</AddInfCodMT23>
+                          </SPEMENMT2>
+                          <PACGS2>
+                              <KinOfPacGS23>AA</KinOfPacGS23>
+                              <NumOfPacGS24>42</NumOfPacGS24>
+                              <MarNumOfPacGSL21>ABC123</MarNumOfPacGSL21>
+                              <MarNumOfPacGSL21LNG>en</MarNumOfPacGSL21LNG>
+                          </PACGS2>
+                      </GOOITEGDS>
+                      <GOOITEGDS>
+                          <IteNumGDS7>2</IteNumGDS7>
+                          <GooDesGDS23>ABC123</GooDesGDS23>
+                          <SPEMENMT2>
+                              <AddInfCodMT23>12345</AddInfCodMT23>
+                          </SPEMENMT2>
+                          <PACGS2>
+                              <KinOfPacGS23>AA</KinOfPacGS23>
+                              <NumOfPacGS24>42</NumOfPacGS24>
+                              <MarNumOfPacGSL21>ABC123</MarNumOfPacGSL21>
+                              <MarNumOfPacGSL21LNG>en</MarNumOfPacGSL21LNG>
+                          </PACGS2>
+                      </GOOITEGDS>
+                      <ITI>
+                          <CouOfRouCodITI1>EN</CouOfRouCodITI1>
+                      </ITI>
+                      <ITI>
+                          <CouOfRouCodITI1>EN</CouOfRouCodITI1>
+                      </ITI>
+                      <PERLODSUMDEC>
+                          <TINPLD1>GBABC</TINPLD1>
+                      </PERLODSUMDEC>
+                      <CUSOFFFENT730>
+                          <RefNumCUSOFFFENT731>AB3C4D5F</RefNumCUSOFFFENT731>
+                          <ExpDatOfArrFIRENT733>200302111234</ExpDatOfArrFIRENT733>
+                      </CUSOFFFENT730>
+                  </ie:CC313A>
+        required: true
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/xml:
+              schema:
+                allOf:
+                  - title: OK
+                    required: *ref_16
+                    type: object
+                    properties: *ref_17
+                  - xml:
+                      name: SuccessResponse
+                      attribute: false
+                      wrapped: false
+              examples:
+                validResponseExample:
+                  description: |
+                    A success response (schema [http://www.hmrc.gov.uk/successresponse/2](https://developer.service.hmrc.gov.uk/api-documentation/docs/api/download/import-control-entry-declaration-store/1.0/schemas/SuccessResponse-v2-0.xsd)) contains the correlation ID used to track the submission.
+                    This is an example response:
+                  value: |
+                    <ns:SuccessResponse xmlns:xd="http://www.w3.org/2000/09/xmldsig#" xmlns:ns="http://www.hmrc.gov.uk/successresponse/2"
+
+                    xmlns="http://www.govtalk.gov.uk/enforcement/ICS/responsedata/7">
+                      <ns:ResponseData>
+                        <CorrelationId>87491122139921</CorrelationId>
+                      </ns:ResponseData>
+                    </ns:SuccessResponse>
+        '403':
+          description: FORBIDDEN
+          headers: {}
+          content:
+            application/xml:
+              schema:
+                allOf:
+                  - title: Forbidden
+                    required: *ref_18
+                    type: object
+                    properties: *ref_19
+              examples:
+                notAuthorisedExample:
+                  description: |
+                    The client is not authorised to make the ENS submission.  This is normally because the EORI in the submission does not match the EORI under which the trader or CSP has been enroled.
+                  value: |
+                    <error>
+                       <code>FORBIDDEN</code>
+                       <message>Permission denied</message>
+                    </error>
+      deprecated: false
+      security:
+        - User-Restricted:
+            - write:import-control-system
+components:
+  securitySchemes:
+    User-Restricted:
+      type: oauth2
+      description: |
+        HMRC supports OAuth 2.0 for authenticating user restricted API requests using an OAuth 2.0 Bearer Token in the AUTHORIZATION header.
+        See https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation/user-restricted-endpoints for details.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.service.hmrc.gov.uk/oauth/authorize
+          tokenUrl: https://api.service.hmrc.gov.uk/oauth/token
+          refreshUrl: https://api.service.hmrc.gov.uk/oauth/refresh
+          scopes:
+            write:import-control-system: Access Import Control System
+  schemas:
+    forbiddenResponse:
+      title: Forbidden
+      required: *ref_18
+      type: object
+      properties: *ref_19
+    CC313A:
+      title: CC313A
+      required: *ref_20
+      type: object
+      properties: *ref_21
+      xml: *ref_22
+    CC315A:
+      title: CC315A
+      required: *ref_23
+      type: object
+      properties: *ref_24
+      xml: *ref_25
+    GOOITEGDS:
+      title: GOOITEGDS
+      required: *ref_26
+      type: object
+      properties: *ref_27
+      xml: *ref_28
+    GOOITEGDS1:
+      title: GOOITEGDS1
+      required: *ref_29
+      type: object
+      properties: *ref_30
+      xml: *ref_31
+    OkResponse:
+      title: OK
+      required: *ref_16
+      type: object
+      properties: *ref_17
+    SuccessResponse:
+      title: SuccessResponse
+      required: *ref_32
+      type: object
+      properties: *ref_33
+      xml: *ref_34
+    request315:
+      title: CC315A(request)
+      required: *ref_35
+      type: object
+      properties: *ref_36
+    request313:
+      title: CC313A(request)
+      required: *ref_37
+      type: object
+      properties: *ref_38
