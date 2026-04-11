@@ -12,7 +12,7 @@ servers:
     description: Production
 
 paths:
-  /customs/imports/declarations/:
+  /customs/imports/declarations:
     post:
       tags:
       - customs
