@@ -34,10 +34,10 @@ trait MockAutoReplayService extends TestSuite with MockFactory {
       (() => mockAutoReplayService.stop()).expects ()
 
     def getStatus(): CallHandler[Future[AutoReplayStatus]] =
-      (mockAutoReplayService.getStatus()(_: ExecutionContext)) expects (*)
+      (mockAutoReplayService.getStatus()(using _: ExecutionContext)) expects (*)
 
     def replay(replaySequenceCount: Int): CallHandler[Future[Boolean]] =
-      (mockAutoReplayService.replay(_: Int)(_: ExecutionContext)).expects(replaySequenceCount, *)
+      (mockAutoReplayService.replay(_: Int)(using _: ExecutionContext)).expects(replaySequenceCount, *)
 
   }
 }

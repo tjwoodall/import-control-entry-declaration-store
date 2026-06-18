@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.validation
 
-import org.scalatest.matchers.should.Matchers.{a, contain, convertToAnyShouldWrapper}
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.entrydeclarationstore.models.RawPayload
 import uk.gov.hmrc.entrydeclarationstore.utils.{XmlFormatConfig, XmlFormats}
@@ -29,7 +29,7 @@ class ValidationErrorsSpec extends AnyWordSpec {
   val validator = new SchemaValidator
 
   val maxErrors                                 = 100
-  implicit val xmlFormatConfig: XmlFormatConfig = XmlFormatConfig(responseMaxErrors = maxErrors)
+  given xmlFormatConfig: XmlFormatConfig = XmlFormatConfig(responseMaxErrors = maxErrors)
 
   val errorResponseSchemaType: SchemaType = new SchemaType {
     private[validation] val schema = schemaFor("xsds/errorresponse-v2.0.xsd")
@@ -50,7 +50,7 @@ class ValidationErrorsSpec extends AnyWordSpec {
     val errors = validationErrors(2)
 
     "serialized to XML" must {
-      val format = implicitly[XmlFormats[ValidationErrors]]
+      val format = summon[XmlFormats[ValidationErrors]]
 
       def getMessageCountElement(responseXml: Node): Option[Int] =
         (responseXml \ "Application" \ "MessageCount").headOption.map(_.text.toInt)

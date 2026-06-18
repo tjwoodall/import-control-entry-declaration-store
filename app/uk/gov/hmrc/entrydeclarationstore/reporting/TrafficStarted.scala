@@ -25,7 +25,7 @@ import java.time.{Duration, Instant}
 case class TrafficStarted(durationStopped: Duration)
 
 object TrafficStarted {
-  implicit val eventSources: EventSources[TrafficStarted] = new EventSources[TrafficStarted] {
+  given eventSources: EventSources[TrafficStarted] = new EventSources[TrafficStarted] {
     override def eventFor(timestamp: Instant, report: TrafficStarted): Option[Event] = None
 
     override def auditEventFor(report: TrafficStarted): Option[AuditEvent] =

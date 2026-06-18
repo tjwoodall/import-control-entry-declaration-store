@@ -18,20 +18,20 @@ package uk.gov.hmrc.entrydeclarationstore.utils
 
 import com.github.pjfanning.pekko.scheduler.mock.VirtualTime
 import org.apache.pekko.actor.Scheduler
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 
 import scala.concurrent.ExecutionContext
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 class DelayerSpec extends AnyWordSpec {
 
   val virtualTime                       = new VirtualTime
-  implicit val mockScheduler: Scheduler = virtualTime.scheduler
+  given mockScheduler: Scheduler = virtualTime.scheduler
 
   val delayer: Delayer = new Delayer {
-    override implicit val scheduler: Scheduler = mockScheduler
-    override implicit val ec: ExecutionContext = ExecutionContext.global
+    given scheduler: Scheduler = mockScheduler
+    given ec: ExecutionContext = ExecutionContext.global
   }
 
   "delayer" must {

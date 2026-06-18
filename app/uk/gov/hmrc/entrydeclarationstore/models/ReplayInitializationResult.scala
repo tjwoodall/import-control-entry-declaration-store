@@ -15,8 +15,8 @@
  */
 
 package uk.gov.hmrc.entrydeclarationstore.models
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 
 sealed trait ReplayInitializationResult
 
@@ -24,7 +24,7 @@ object ReplayInitializationResult {
   case class Started(replayId: String) extends ReplayInitializationResult
   case class AlreadyRunning(replayId: Option[String]) extends ReplayInitializationResult
 
-  implicit val writes: OWrites[ReplayInitializationResult] = {
+  given writes: OWrites[ReplayInitializationResult] = {
 
     val fieldMap: ReplayInitializationResult => (Option[String], Boolean) = {
       case Started(replayId)        => (Some(replayId), false)

@@ -18,7 +18,7 @@ package uk.gov.hmrc.entrydeclarationstore.controllers
 
 import java.time.Instant
 
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
@@ -26,7 +26,7 @@ import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.entrydeclarationstore.models.{ReplayTrigger, ReplayState}
 import uk.gov.hmrc.entrydeclarationstore.services.MockReplayStateRetrievalService
-import ReplayState.Implicits._
+import ReplayState.Implicits.replayStateFormat
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 

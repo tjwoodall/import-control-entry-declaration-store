@@ -16,11 +16,11 @@
 
 package uk.gov.hmrc.entrydeclarationstore.repositories
 
-import org.mongodb.scala._
-import org.mongodb.scala.model.Filters._
-import org.mongodb.scala.model.Updates._
-import org.mongodb.scala.model._
-import uk.gov.hmrc.mongo._
+import org.mongodb.scala.*
+import org.mongodb.scala.model.Filters.*
+import org.mongodb.scala.model.Updates.*
+import org.mongodb.scala.model.*
+import uk.gov.hmrc.mongo.*
 import uk.gov.hmrc.mongo.play.json.{Codecs, PlayMongoRepository}
 import uk.gov.hmrc.entrydeclarationstore.models.{TrafficSwitchState, TrafficSwitchStatus, InstantFormatter}
 import uk.gov.hmrc.mdc.Mdc
@@ -35,8 +35,8 @@ trait TrafficSwitchRepo {
 }
 
 @Singleton
-class TrafficSwitchRepoImpl @Inject()(
-  implicit mongo: MongoComponent,
+class TrafficSwitchRepoImpl @Inject()()(
+  using mongo: MongoComponent,
   ec: ExecutionContext
 ) extends PlayMongoRepository[TrafficSwitchStatus](
   collectionName = "trafficSwitch",

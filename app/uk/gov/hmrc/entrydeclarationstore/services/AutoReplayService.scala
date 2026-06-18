@@ -24,12 +24,12 @@ import uk.gov.hmrc.entrydeclarationstore.repositories.{EntryDeclarationRepo, Aut
 import uk.gov.hmrc.entrydeclarationstore.autoreplay.AutoReplayer
 import uk.gov.hmrc.entrydeclarationstore.orchestrators.ReplayOrchestrator
 import uk.gov.hmrc.http.HeaderCarrier
-import play.api.http.HeaderNames._
+import play.api.http.HeaderNames.*
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext
 import java.time.Clock
-import ReplayResult._
+import ReplayResult.*
 
 @Singleton
 class AutoReplayService @Inject()(
@@ -46,7 +46,7 @@ class AutoReplayService @Inject()(
   def start(): Future[Unit] = repository.start()
   def stop(): Future[Unit] = repository.stop()
 
-  def getStatus()(implicit ec: ExecutionContext): Future[AutoReplayStatus] = repository.getStatus().flatMap{
+  def getStatus()(using ec: ExecutionContext): Future[AutoReplayStatus] = repository.getStatus().flatMap{
     _.fold[Future[AutoReplayStatus]](Future.successful(AutoReplayStatus.Unavailable)){ status =>
         mostRecentReplayState().map{ replay =>
           status match {
@@ -58,8 +58,8 @@ class AutoReplayService @Inject()(
     }
   }
 
-  def replay(replaySequenceCount: Int)(implicit ec: ExecutionContext): Future[Boolean] = {
-    implicit val defaultHeaderCarrier: HeaderCarrier = HeaderCarrier(otherHeaders = DefaultOtherHeaders)
+  def replay(replaySequenceCount: Int)(using ec: ExecutionContext): Future[Boolean] = {
+    given defaultHeaderCarrier: HeaderCarrier = HeaderCarrier(otherHeaders = DefaultOtherHeaders)
 
     def replaySubmissions(undeliveredCount: Int): Future[(Boolean, Option[(Int, Int)])] =
       if (undeliveredCount <= 0) Future.successful((false, Some((0, 0))))
@@ -105,7 +105,7 @@ class AutoReplayService @Inject()(
     }
   }
 
-  private def getServiceStatusIfEnabled()(implicit ec: ExecutionContext): Future[Option[(TrafficSwitchState, Int)]] =
+  private def getServiceStatusIfEnabled()(using ec: ExecutionContext): Future[Option[(TrafficSwitchState, Int)]] =
     repository.getStatus().flatMap{
       case Some(AutoReplayRepoStatus(true)) =>
         trafficSwitchService.getTrafficSwitchState.flatMap{ trafficSwitchState =>

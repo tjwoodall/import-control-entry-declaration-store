@@ -33,7 +33,7 @@ trait MockEntryDeclarationRepo extends TestSuite with MockFactory {
 
   object MockEntryDeclarationRepo {
     def saveEntryDeclaration(declaration: EntryDeclarationModel): CallHandler[Future[Boolean]] =
-      (mockEntryDeclarationRepo.save(_: EntryDeclarationModel)(_: LoggingContext)).expects(declaration, *)
+      (mockEntryDeclarationRepo.save(_: EntryDeclarationModel)(using _: LoggingContext)).expects(declaration, *)
 
     def lookupSubmissionIdAndReceivedDateTime(eori: String, correlationId: String): CallHandler[Future[Option[SubmissionIdLookupResult]]] =
       (mockEntryDeclarationRepo.lookupSubmissionId(_: String, _: String)).expects(eori, correlationId)
@@ -43,11 +43,11 @@ trait MockEntryDeclarationRepo extends TestSuite with MockFactory {
 
     def setEisSubmissionSuccess(submissionId: String, time: Instant): CallHandler[Future[Boolean]] =
       (mockEntryDeclarationRepo
-        .setEisSubmissionSuccess(_: String, _: Instant)(_: LoggingContext)).expects(submissionId, time, *)
+        .setEisSubmissionSuccess(_: String, _: Instant)(using _: LoggingContext)).expects(submissionId, time, *)
 
     def setEisSubmissionFailure(submissionId: String): CallHandler[Future[Boolean]] =
       (mockEntryDeclarationRepo
-        .setEisSubmissionFailure(_: String)(_: LoggingContext)).expects(submissionId, *)
+        .setEisSubmissionFailure(_: String)(using _: LoggingContext)).expects(submissionId, *)
 
     def lookupAcceptanceEnrichment(submissionId: String): CallHandler[Future[Option[AcceptanceEnrichment]]] =
       mockEntryDeclarationRepo.lookupAcceptanceEnrichment _ expects submissionId
@@ -61,7 +61,7 @@ trait MockEntryDeclarationRepo extends TestSuite with MockFactory {
       mockEntryDeclarationRepo.lookupDeclarationRejectionEnrichment _ expects submissionId
 
     def lookupMetadata(submissionId: String): CallHandler[Future[Either[MetadataLookupError, ReplayMetadata]]] =
-      (mockEntryDeclarationRepo.lookupMetadata(_: String)(_: LoggingContext)).expects(submissionId, *)
+      (mockEntryDeclarationRepo.lookupMetadata(_: String)(using _: LoggingContext)).expects(submissionId, *)
 
     def setHousekeepingAt(eori: String, correlationId: String, time: Instant): CallHandler[Future[Boolean]] =
       (mockEntryDeclarationRepo.setHousekeepingAt(_: String, _: String, _: Instant)).expects(eori, correlationId, time)

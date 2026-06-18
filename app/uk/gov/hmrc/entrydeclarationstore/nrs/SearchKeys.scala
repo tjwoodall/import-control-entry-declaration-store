@@ -21,5 +21,5 @@ import play.api.libs.json.{Json, Writes}
 case class SearchKeys(submissionId: String)
 
 object SearchKeys {
-  implicit val writes: Writes[SearchKeys] = Json.writes[SearchKeys]
+  given writes: Writes[SearchKeys] = Json.writes[SearchKeys]
 }

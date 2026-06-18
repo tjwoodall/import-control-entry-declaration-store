@@ -35,7 +35,7 @@ class RuleValidatorImpl(elementBase: Option[String], rules: Seq[Rule]) extends R
 
   val ruleEvaluators: Seq[RuleEvaluator] = {
     rules.map { rule =>
-      implicit val compilationContext: CompilationContext = CompilationContext(rule.name)
+      given compilationContext: CompilationContext = CompilationContext(rule.name)
       val assertValidators                                = rule.asserts.map(AssertValidator(_))
 
       val element = elementBase.getOrElse("") + rule.element

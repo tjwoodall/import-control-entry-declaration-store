@@ -16,12 +16,11 @@
 
 package uk.gov.hmrc.entrydeclarationstore.validation
 
-import cats.syntax.all._
-import com.lucidchart.open.xtract.XmlReader._
+import cats.syntax.all.*
 import com.lucidchart.open.xtract.{XmlReader, __}
 import uk.gov.hmrc.entrydeclarationstore.utils.{ReaderUtils, SchemaErrorCodeMapper, XmlFormatConfig, XmlFormats}
 
-import scala.xml.{Node, SAXParseException}
+import scala.xml.SAXParseException
 
 case class ValidationError(errorText: String, errorType: String, errorNumber: String, errorLocation: String)
 
@@ -48,43 +47,41 @@ object ValidationError {
     )
   }
 
-  implicit val reader: XmlReader[ValidationError] = (
+  given reader: XmlReader[ValidationError] = (
     (__ \ "Text").read[String],
     (__ \ "Type").read[String],
     (__ \ "Number").read[String],
     (__ \ "Location").read[String]
   ).mapN(apply)
 
-  implicit val ordering: Ordering[ValidationError] = Ordering.by(err => (err.errorLocation, err.errorNumber))
+  given ordering: Ordering[ValidationError] = Ordering.by(err => (err.errorLocation, err.errorNumber))
 }
 
 case class ValidationErrors(errors: Seq[ValidationError])
 
 object ValidationErrors extends ReaderUtils {
-  implicit def xmlFormats(implicit xmlFormatConfig: XmlFormatConfig): XmlFormats[ValidationErrors] =
-    new XmlFormats[ValidationErrors] {
-      override def toXml(a: ValidationErrors): Node = {
-        val errorCount = xmlFormatConfig.responseMaxErrors min a.errors.size
+  given xmlFormats(using xmlFormatConfig: XmlFormatConfig): XmlFormats[ValidationErrors] =
+    (a: ValidationErrors) => {
+      val errorCount = xmlFormatConfig.responseMaxErrors min a.errors.size
 
-        // @formatter:off
-      <err:ErrorResponse xmlns:err="http://www.govtalk.gov.uk/CM/errorresponse" xmlns:dsl="http://decisionsoft.com/rim/errorExtension" SchemaVersion="2.0">
-        <err:Application>
-          <err:MessageCount>{errorCount}</err:MessageCount>
-        </err:Application>
-        {a.errors.take(errorCount).map { error =>
-        <err:Error>
-          <err:RaisedBy>HMRC</err:RaisedBy>
-          <err:Number>{error.errorNumber}</err:Number>
-          <err:Type>{error.errorType}</err:Type>
-          <err:Text>{error.errorText}</err:Text>
-          <err:Location>{error.errorLocation}</err:Location>
-        </err:Error>
-      }}
-      </err:ErrorResponse>
+      // @formatter:off
+        <err:ErrorResponse xmlns:err="http://www.govtalk.gov.uk/CM/errorresponse" xmlns:dsl="http://decisionsoft.com/rim/errorExtension" SchemaVersion="2.0">
+          <err:Application>
+            <err:MessageCount>{errorCount}</err:MessageCount>
+          </err:Application>
+          {a.errors.take(errorCount).map { error =>
+          <err:Error>
+            <err:RaisedBy>HMRC</err:RaisedBy>
+            <err:Number>{error.errorNumber}</err:Number>
+            <err:Type>{error.errorType}</err:Type>
+            <err:Text>{error.errorText}</err:Text>
+            <err:Location>{error.errorLocation}</err:Location>
+          </err:Error>
+          }}
+        </err:ErrorResponse>
     // @formatter:on
-      }
     }
 
-  implicit val reader: XmlReader[ValidationErrors] = (__ \ "Error").read[Seq[ValidationError]].map(apply)
+  given reader: XmlReader[ValidationErrors] = (__ \ "Error").read[Seq[ValidationError]].map(apply)
 
 }

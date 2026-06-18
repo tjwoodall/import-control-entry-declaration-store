@@ -42,7 +42,7 @@ trait MockEntryDeclarationStore extends TestSuite with MockFactory {
       correlationId: String,
       input: InputParameters): CallHandler[Future[Either[ErrorWrapper[_], SuccessResponse]]] =
       (mockEntryDeclarationStore
-        .handleSubmission(_: String, _: RawPayload, _: Option[String], _: Instant, _: ClientInfo, _: String, _: String, _ : InputParameters)(_: HeaderCarrier))
+        .handleSubmission(_: String, _: RawPayload, _: Option[String], _: Instant, _: ClientInfo, _: String, _: String, _ : InputParameters)(using _: HeaderCarrier))
         .expects(eori, rawPayload, mrn, receivedDateTime, clientInfo, submissionId, correlationId,  input, *)
   }
 

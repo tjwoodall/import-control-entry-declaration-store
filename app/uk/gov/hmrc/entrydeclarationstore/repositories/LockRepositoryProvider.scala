@@ -16,13 +16,14 @@
 
 package uk.gov.hmrc.entrydeclarationstore.repositories
 
-import uk.gov.hmrc.mongo.lock._
-import org.mongodb.scala.model.Filters._
+import uk.gov.hmrc.mongo.lock.*
+import org.mongodb.scala.SingleObservableFuture
+import org.mongodb.scala.model.Filters.*
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class LockRepositoryProvider @Inject()(implicit val lockRepository: MongoLockRepository, ec: ExecutionContext) {
+class LockRepositoryProvider @Inject()()(using val lockRepository: MongoLockRepository, ec: ExecutionContext) {
   def removeAll(): Future[Unit] =
     lockRepository.collection
       .deleteMany(exists("_id"))

@@ -19,12 +19,12 @@ package uk.gov.hmrc.entrydeclarationstore.trafficswitch
 import org.apache.pekko.actor.{ActorRef, ActorRefFactory, ActorSystem, Status}
 import org.apache.pekko.pattern.CircuitBreakerOpenException
 import org.apache.pekko.testkit.{ImplicitSender, TestKit, TestProbe}
-import org.scalatest.matchers.should.Matchers.{a, convertToAnyShouldWrapper}
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatest.{BeforeAndAfterAll, Inside}
 import uk.gov.hmrc.entrydeclarationstore.models.TrafficSwitchState
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.concurrent.{Future, Promise, TimeoutException}
 import scala.util.Try
 import scala.util.control.NoStackTrace

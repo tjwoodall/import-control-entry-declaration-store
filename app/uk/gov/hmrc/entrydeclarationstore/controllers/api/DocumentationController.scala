@@ -26,6 +26,8 @@ import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import javax.inject.{Inject, Singleton}
 
+import scala.annotation.unused
+
 @Singleton
 class DocumentationController @Inject()(
   cc: ControllerComponents,
@@ -68,11 +70,11 @@ class DocumentationController @Inject()(
   def conf(version: String, file: String): Action[AnyContent] =
     assets.at(s"/public/api/conf/$version", file)
 
-  def rules315(version: String): Action[AnyContent] = Action {
+  def rules315(@unused version: String): Action[AnyContent] = Action {
     Ok(renderRuleDoc("/CC315A", appConfig.businessRules315)).as("text/markdown")
   }
 
-  def rules313(version: String): Action[AnyContent] = Action {
+  def rules313(@unused version: String): Action[AnyContent] = Action {
     Ok(renderRuleDoc("/CC313A", appConfig.businessRules313)).as("text/markdown")
   }
 

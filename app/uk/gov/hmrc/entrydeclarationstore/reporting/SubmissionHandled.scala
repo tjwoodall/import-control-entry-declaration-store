@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.reporting
 
+import cats.Show
 import play.api.libs.json.{Format, JsObject, Json, Writes}
 import uk.gov.hmrc.auth.core.Enrolments
 import uk.gov.hmrc.auth.core.retrieve.Name
@@ -23,8 +24,8 @@ import uk.gov.hmrc.entrydeclarationstore.nrs.IdentityData
 import uk.gov.hmrc.entrydeclarationstore.reporting.audit.AuditEvent
 import uk.gov.hmrc.entrydeclarationstore.reporting.events.Event
 import uk.gov.hmrc.entrydeclarationstore.utils.Enums
-import java.time.Instant
 
+import java.time.Instant
 import uk.gov.hmrc.entrydeclarationstore.models.json.Parties
 
 case class SubmissionHandledData(
@@ -35,9 +36,9 @@ case class SubmissionHandledData(
                                   parties: Option[Parties])
 
 object SubmissionHandledData {
-  implicit val nameWrites: Writes[Name]              = Json.writes[Name]
-  implicit val enrolmentWrites: Writes[Enrolments]   = Json.writes[Enrolments]
-  implicit val writes: Writes[SubmissionHandledData] = Json.writes[SubmissionHandledData]
+  given nameWrites: Writes[Name]              = Json.writes[Name]
+  given enrolmentWrites: Writes[Enrolments]   = Json.writes[Enrolments]
+  given writes: Writes[SubmissionHandledData] = Json.writes[SubmissionHandledData]
 }
 
 sealed trait SubmissionHandled {
@@ -49,8 +50,8 @@ sealed trait FailureType
 
 object SubmissionHandled {
   def createAuditObject(submissionHandledData: SubmissionHandledData, initialObject: JsObject = JsObject.empty): JsObject = {
-    implicit val nameWrites: Writes[Name]              = Json.writes[Name]
-    implicit val enrolmentWrites: Writes[Enrolments]   = Json.writes[Enrolments]
+    given nameWrites: Writes[Name]              = Json.writes[Name]
+    given enrolmentWrites: Writes[Enrolments]   = Json.writes[Enrolments]
 
     val optionalIdentityData = submissionHandledData.identityData match {
       case Some(data) => Json.toJson(data)
@@ -90,7 +91,7 @@ object SubmissionHandled {
   case class Success(isAmendment: Boolean, submissionHandledData: SubmissionHandledData) extends SubmissionHandled
   case class Failure(isAmendment: Boolean, failureType: FailureType, submissionHandledData: SubmissionHandledData) extends SubmissionHandled
 
-  implicit val eventSources: EventSources[SubmissionHandled] = new EventSources[SubmissionHandled] {
+  given eventSources: EventSources[SubmissionHandled] = new EventSources[SubmissionHandled] {
     override def eventFor(timestamp: Instant, report: SubmissionHandled): Option[Event] = None
 
     override def auditEventFor(report: SubmissionHandled): Option[AuditEvent] = Some {
@@ -111,5 +112,8 @@ object FailureType {
   case object ValidationErrors extends FailureType
   case object EORIMismatchError extends FailureType
   case object InternalServerError extends FailureType
-  implicit val formats: Format[FailureType] = Enums.format[FailureType]
+
+  private given show: Show[FailureType] = Show.show[FailureType](_.toString)
+
+  given formats: Format[FailureType] = Enums.format[FailureType]
 }

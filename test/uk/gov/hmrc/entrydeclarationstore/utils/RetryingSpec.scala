@@ -19,7 +19,7 @@ package uk.gov.hmrc.entrydeclarationstore.utils
 import com.google.common.base.Stopwatch
 import org.apache.pekko.actor.{ActorSystem, Scheduler}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -29,7 +29,7 @@ import play.api.{Application, Environment, Mode}
 import uk.gov.hmrc.entrydeclarationstore.housekeeping.HousekeepingScheduler
 
 import java.util.concurrent.TimeUnit
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.concurrent.{ExecutionContext, Future, TimeoutException}
 import scala.util.control.NoStackTrace
 import scala.util.{Failure, Success, Try}
@@ -109,7 +109,7 @@ class RetryingSpec extends AnyWordSpec with ScalaFutures with GuiceOneAppPerSuit
 
       val retryUnlessOk: Try[String] => Boolean = {
         case Success(s) => !(s startsWith "Ok")
-        case Failure(e) => true
+        case Failure(_) => true
       }
 
       def okAfter(numFails: Int): Int => Future[String] = { i =>

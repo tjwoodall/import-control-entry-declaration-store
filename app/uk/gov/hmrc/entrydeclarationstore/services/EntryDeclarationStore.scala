@@ -17,19 +17,18 @@
 package uk.gov.hmrc.entrydeclarationstore.services
 
 import cats.data.EitherT
-import cats.implicits._
+import cats.implicits.*
 import com.codahale.metrics.MetricRegistry
 import play.api.Logging
-import play.api.libs.json.{JsString, JsValue}
+import play.api.libs.json.JsValue
 import uk.gov.hmrc.entrydeclarationstore.config.AppConfig
 import uk.gov.hmrc.entrydeclarationstore.connectors.{EISSendFailure, EisConnector}
 import uk.gov.hmrc.entrydeclarationstore.logging.{ContextLogger, LoggingContext}
-import uk.gov.hmrc.entrydeclarationstore.models._
+import uk.gov.hmrc.entrydeclarationstore.models.*
 import uk.gov.hmrc.entrydeclarationstore.models.json.{DeclarationToJsonConverter, InputParameters}
-import uk.gov.hmrc.entrydeclarationstore.nrs.NRSSubmisionFailure.ErrorResponse
 import uk.gov.hmrc.entrydeclarationstore.reporting.{ClientInfo, ReportSender, SubmissionReceived, SubmissionSentToEIS}
 import uk.gov.hmrc.entrydeclarationstore.repositories.EntryDeclarationRepo
-import uk.gov.hmrc.entrydeclarationstore.utils._
+import uk.gov.hmrc.entrydeclarationstore.utils.*
 import uk.gov.hmrc.entrydeclarationstore.validation.ValidationHandler
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -49,7 +48,7 @@ trait EntryDeclarationStore {
     clientInfo: ClientInfo,
     submissionId: String,
     correlationId: String,
-    input: InputParameters)(implicit hc: HeaderCarrier): Future[Either[ErrorWrapper[_], SuccessResponse]]
+    input: InputParameters)(using hc: HeaderCarrier): Future[Either[ErrorWrapper[_], SuccessResponse]]
 }
 
 @Singleton
@@ -62,7 +61,7 @@ class EntryDeclarationStoreImpl @Inject()(
   clock: Clock,
   override val metrics: MetricRegistry,
   appConfig: AppConfig
-)(implicit ec: ExecutionContext)
+)(using ec: ExecutionContext)
     extends EntryDeclarationStore
     with Timer
     with Logging
@@ -76,10 +75,10 @@ class EntryDeclarationStoreImpl @Inject()(
     clientInfo: ClientInfo,
     submissionId: String,
     correlationId: String,
-    input: InputParameters)(implicit hc: HeaderCarrier): Future[Either[ErrorWrapper[_], SuccessResponse]] =
+    input: InputParameters)(using hc: HeaderCarrier): Future[Either[ErrorWrapper[_], SuccessResponse]] =
     timeFuture("Service handleSubmission", "handleSubmission.total") {
 
-      implicit val lc: LoggingContext =
+      given lc: LoggingContext =
         LoggingContext
           .withMessageType(eori = eori, correlationId = correlationId, submissionId = submissionId, mrn = mrn)
 
@@ -116,10 +115,10 @@ class EntryDeclarationStoreImpl @Inject()(
     }
 
   private def submitToEIS(input: InputParameters, eori: String, transportMode: String, time: Instant)(
-    implicit hc: HeaderCarrier,
+    using hc: HeaderCarrier,
     lc: LoggingContext): Unit = {
 
-    import input._
+    import input.*
 
     timeFuture("Submission to EIS", "handleSubmission.submitToEis") {
       val messageType = MessageType(amendment = mrn.isDefined)
@@ -140,7 +139,7 @@ class EntryDeclarationStoreImpl @Inject()(
   }
 
   private def saveToDatabase(entryDeclaration: EntryDeclarationModel)(
-    implicit lc: LoggingContext): Future[Either[ErrorWrapper[_], Unit]] =
+    using lc: LoggingContext): Future[Either[ErrorWrapper[_], Unit]] =
     timeFuture("Save submission to database", "handleSubmission.saveToDatabase") {
 
       entryDeclarationRepo
@@ -154,7 +153,7 @@ class EntryDeclarationStoreImpl @Inject()(
     }
 
   private def convertToJson(xml: NodeSeq, inputParameters: InputParameters)(
-    implicit lc: LoggingContext): Either[ErrorWrapper[_], JsValue] =
+    using lc: LoggingContext): Either[ErrorWrapper[_], JsValue] =
     time("Json conversion", "handleSubmission.convertToJson") {
       if(appConfig.optionalFieldsFeature) {
         declarationToJsonConverter.convertToJsonNew(xml, inputParameters)
@@ -163,7 +162,7 @@ class EntryDeclarationStoreImpl @Inject()(
       }
     }
 
-  private def validateJson(json: JsValue)(implicit lc: LoggingContext): Either[ErrorWrapper[_], Unit] =
+  private def validateJson(json: JsValue)(using lc: LoggingContext): Either[ErrorWrapper[_], Unit] =
     if (appConfig.validateXMLtoJsonTransformation) {
       if(appConfig.optionalFieldsFeature) {
         declarationToJsonConverter.validateJsonNew(json)
@@ -181,8 +180,8 @@ class EntryDeclarationStoreImpl @Inject()(
     rawPayload: RawPayload,
     transportMode: String,
     clientInfo: ClientInfo
-  )(implicit hc: HeaderCarrier, lc: LoggingContext): Future[Either[ErrorWrapper[_], Unit]] = {
-    import input._
+  )(using hc: HeaderCarrier, lc: LoggingContext): Future[Either[ErrorWrapper[_], Unit]] = {
+    import input.*
 
     reportSender
       .sendReport(
@@ -207,8 +206,8 @@ class EntryDeclarationStoreImpl @Inject()(
     input: InputParameters,
     eori: String,
     eisSendFailure: Option[EISSendFailure]
-  )(implicit hc: HeaderCarrier, lc: LoggingContext): Unit = {
-    import input._
+  )(using hc: HeaderCarrier, lc: LoggingContext): Unit = {
+    import input.*
     reportSender.sendReport(
       SubmissionSentToEIS(
         eori          = eori,

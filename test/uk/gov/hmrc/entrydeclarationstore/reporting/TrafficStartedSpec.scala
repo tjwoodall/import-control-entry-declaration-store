@@ -18,7 +18,7 @@ package uk.gov.hmrc.entrydeclarationstore.reporting
 
 import java.time.{Duration, Instant}
 
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.Json
 
@@ -32,13 +32,13 @@ class TrafficStartedSpec extends AnyWordSpec {
 
   "TrafficStarted" must {
     "have the correct associated JSON event" in {
-      val event = implicitly[EventSources[TrafficStarted]].eventFor(now, trafficStarted)
+      val event = summon[EventSources[TrafficStarted]].eventFor(now, trafficStarted)
 
       event shouldBe None
     }
 
     "have the correct associated audit event" in {
-      val event = implicitly[EventSources[TrafficStarted]].auditEventFor(trafficStarted).get
+      val event = summon[EventSources[TrafficStarted]].auditEventFor(trafficStarted).get
 
       event.auditType       shouldBe "TrafficStarted"
       event.transactionName shouldBe "Traffic Started"

@@ -20,19 +20,20 @@ import java.time.Instant
 import java.util.UUID
 
 import com.github.tomakehurst.wiremock.WireMockServer
-import com.github.tomakehurst.wiremock.client.WireMock._
+import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.github.tomakehurst.wiremock.http.Fault
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import org.scalatest.concurrent.{Eventually, IntegrationPatience}
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.{Assertion, BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.http.Status._
+import play.api.http.Status.*
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{Json, _}
 import play.api.libs.ws.WSClient
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import play.api.test.Injecting
 import play.api.{Application, Environment, Mode}
@@ -68,7 +69,7 @@ class ReplayControllerISpec
   val client: WSClient                               = app.injector.instanceOf[WSClient]
   val entryDeclarationRepo: EntryDeclarationRepoImpl = app.injector.instanceOf[EntryDeclarationRepoImpl]
 
-  implicit val lc: LoggingContext = LoggingContext("eori", "corrId", "subId")
+  given lc: LoggingContext = LoggingContext("eori", "corrId", "subId")
 
   override def beforeAll(): Unit =
     wireMockServer.start()
@@ -137,7 +138,7 @@ class ReplayControllerISpec
   }
 
   def getReplayState(replayId: String): ReplayState = {
-    import ReplayState.Implicits._
+    import ReplayState.Implicits.replayStateFormat
     val response = await(client.url(s"http://localhost:$port/import-control/replays/$replayId").get())
     response.status shouldBe OK
     response.json.as[ReplayState]

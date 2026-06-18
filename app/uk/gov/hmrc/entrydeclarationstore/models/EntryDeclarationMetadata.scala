@@ -29,5 +29,5 @@ case class EntryDeclarationMetadata(
 )
 
 object EntryDeclarationMetadata extends InstantFormatter {
-  implicit val format: Format[EntryDeclarationMetadata] = Json.format[EntryDeclarationMetadata]
+  given format: Format[EntryDeclarationMetadata] = Json.format[EntryDeclarationMetadata]
 }

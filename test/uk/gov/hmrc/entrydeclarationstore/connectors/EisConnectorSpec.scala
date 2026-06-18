@@ -75,18 +75,18 @@ class EisConnectorSpec
     .build()
 
   val httpClient: HttpClientV2            = inject[HttpClientV2]
-  implicit val actorSystem: ActorSystem = inject[ActorSystem]
-  implicit val scheduler: Scheduler     = actorSystem.scheduler
+  given actorSystem: ActorSystem = inject[ActorSystem]
+  given scheduler: Scheduler     = actorSystem.scheduler
 
   // So that we can check that only those headers from the HeaderGenerator are included
   private val extraHeader = "extraHeader"
   private val otherHeader = "otherHeader"
-  implicit val hc: HeaderCarrier =
+  given hc: HeaderCarrier =
     HeaderCarrier(extraHeaders = Seq(extraHeader -> "someValue"), otherHeaders = Seq(otherHeader -> "someOtherValue"))
 
-  implicit val lc: LoggingContext = LoggingContext("eori", "corrId", "subId")
+  given lc: LoggingContext = LoggingContext("eori", "corrId", "subId")
 
-  implicit val singleThreadEC: ExecutionContext = ExecutionContext.fromExecutor(Executors.newSingleThreadExecutor())
+  given singleThreadEC: ExecutionContext = ExecutionContext.fromExecutor(Executors.newSingleThreadExecutor())
 
   private val wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().dynamicPort())
 

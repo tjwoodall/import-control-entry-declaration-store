@@ -27,6 +27,6 @@ case class ClientInfo(
 
 object ClientInfo extends CommonHeaders {
   val cspPrefixLength: Int = 4
-  def apply(clientType: ClientType)(implicit headers: Headers): ClientInfo =
+  def apply(clientType: ClientType)(using headers: Headers): ClientInfo =
     ClientInfo(clientType, clientId = headers.get(X_CLIENT_ID), applicationId = headers.get(X_APPLICATION_ID))
 }

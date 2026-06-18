@@ -34,5 +34,5 @@ object Assert {
     lazy val classId: String = s"${ruleName}_${UUID.randomUUID.toString.filterNot(_ == '-')}"
   }
 
-  implicit val reads: Reads[Assert] = Json.reads[Assert]
+  given reads: Reads[Assert] = Json.reads[Assert]
 }

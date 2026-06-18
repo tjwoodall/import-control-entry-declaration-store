@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.models
 
+import cats.Show
 import play.api.libs.json.Format
 import uk.gov.hmrc.entrydeclarationstore.utils.Enums
 
@@ -25,5 +26,7 @@ object ReplayTrigger {
   case object Automatic extends ReplayTrigger
   case object Manual extends ReplayTrigger
 
-  implicit val formats: Format[ReplayTrigger] = Enums.format[ReplayTrigger]
+  private given show: Show[ReplayTrigger] = Show.show[ReplayTrigger](_.toString)
+
+  given formats: Format[ReplayTrigger] = Enums.format[ReplayTrigger]
 }

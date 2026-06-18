@@ -19,7 +19,7 @@ package uk.gov.hmrc.entrydeclarationstore.models.json
 import java.time.{Clock, Instant, ZoneId}
 import com.lucidchart.open.xtract.ParseSuccess
 import org.scalatest.Inside
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.entrydeclarationstore.models.MessageType
 
@@ -46,7 +46,7 @@ class MetadataSpec extends AnyWordSpec with Inside {
 
           inside(
             Metadata
-              .reader(InputParameters(None, submissionId, correlationId, receivedDateTime))
+              .reader(using InputParameters(None, submissionId, correlationId, receivedDateTime))
               .read(xml)) {
             case ParseSuccess(metadata) =>
               metadata shouldBe

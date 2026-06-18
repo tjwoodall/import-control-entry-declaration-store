@@ -42,7 +42,7 @@ class HeaderGeneratorSpec extends AnyWordSpec with Matchers with HeaderNames wit
       MockAppConfig.eisBearerToken returns authToken
       MockAppConfig.eisEnvironment returns env
       MockAppConfig.headerAllowlist returns Seq()
-      implicit val hc: HeaderCarrier = HeaderCarrier()
+      given hc: HeaderCarrier = HeaderCarrier()
       val headers                    = testHeaderGenerator.headersForEIS(submissionId).toMap
 
       headers("X-Correlation-ID") shouldBe submissionId
@@ -57,7 +57,7 @@ class HeaderGeneratorSpec extends AnyWordSpec with Matchers with HeaderNames wit
       MockAppConfig.eisBearerToken returns authToken
       MockAppConfig.eisEnvironment returns env
       MockAppConfig.headerAllowlist returns Seq()
-      implicit val hc: HeaderCarrier = HeaderCarrier()
+      given hc: HeaderCarrier = HeaderCarrier()
       val headers                    = testHeaderGenerator.headersForEIS(submissionId).toMap
 
       headers(AUTHORIZATION) shouldBe s"Bearer $authToken"
@@ -67,7 +67,7 @@ class HeaderGeneratorSpec extends AnyWordSpec with Matchers with HeaderNames wit
       MockAppConfig.eisBearerToken returns ""
       MockAppConfig.eisEnvironment returns env
       MockAppConfig.headerAllowlist returns Seq()
-      implicit val hc: HeaderCarrier = HeaderCarrier()
+      given hc: HeaderCarrier = HeaderCarrier()
       val headers                    = testHeaderGenerator.headersForEIS(submissionId).toMap
 
       headers.contains(AUTHORIZATION) shouldBe false
@@ -77,7 +77,7 @@ class HeaderGeneratorSpec extends AnyWordSpec with Matchers with HeaderNames wit
       MockAppConfig.eisBearerToken returns authToken
       MockAppConfig.eisEnvironment returns env
       MockAppConfig.headerAllowlist.returns(Seq("latencyInMs", "testHeader")).anyNumberOfTimes ()
-      implicit val hc: HeaderCarrier =
+      given hc: HeaderCarrier =
         HeaderCarrier(extraHeaders = Seq("TESTHEADER" -> "test", "denylistheader" -> "200", "latencyInMs" -> "100"))
       val headers = testHeaderGenerator.headersForEIS(submissionId).toMap
 

@@ -16,8 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.models.json
 
-import cats.syntax.all._
-import com.lucidchart.open.xtract.XmlReader._
+import cats.syntax.all.*
 import com.lucidchart.open.xtract.{XmlReader, __}
 import play.api.libs.json.{Json, Writes}
 
@@ -27,9 +26,9 @@ case class Seal(
 )
 
 object Seal {
-  implicit val reader: XmlReader[Seal] = (
+  given reader: XmlReader[Seal] = (
     (__ \ "SeaIdSEAID530").read[String],
     (__ \ "SeaIdSEAID530LNG").read[String].optional
   ).mapN(apply)
-  implicit val writes: Writes[Seal] = Json.writes[Seal]
+  given writes: Writes[Seal] = Json.writes[Seal]
 }

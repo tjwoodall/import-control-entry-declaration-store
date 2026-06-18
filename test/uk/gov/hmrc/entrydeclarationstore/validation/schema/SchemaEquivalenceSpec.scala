@@ -17,13 +17,13 @@
 package uk.gov.hmrc.entrydeclarationstore.validation.schema
 
 import org.scalatest.Assertion
-import org.scalatest.matchers.should.Matchers.{a, convertToAnyShouldWrapper}
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.entrydeclarationstore.models.RawPayload
 import uk.gov.hmrc.entrydeclarationstore.utils.ResourceUtils
 
 import scala.util.Random
-import scala.xml._
+import scala.xml.*
 import scala.xml.transform.{RewriteRule, RuleTransformer}
 
 /**

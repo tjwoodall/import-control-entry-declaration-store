@@ -21,7 +21,7 @@ import org.apache.pekko.actor.Scheduler
 import java.util.concurrent.TimeUnit
 import scala.concurrent.duration.Duration
 import play.api.Logging
-import uk.gov.hmrc.mongo.lock._
+import uk.gov.hmrc.mongo.lock.*
 import uk.gov.hmrc.entrydeclarationstore.config.AppConfig
 import uk.gov.hmrc.entrydeclarationstore.repositories.LockRepositoryProvider
 
@@ -35,7 +35,7 @@ class AutoReplayScheduler @Inject()(
   autoReplayer: AutoReplayer,
   lockProvider: LockRepositoryProvider,
   appConfig: AppConfig
-)(implicit ec: ExecutionContext) extends Logging {
+)(using ec: ExecutionContext) extends Logging {
 
   private val exclusiveTimePeriodLock: TimePeriodLockService =
     TimePeriodLockService(lockProvider.lockRepository,

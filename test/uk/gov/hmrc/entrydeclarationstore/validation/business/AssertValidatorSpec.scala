@@ -16,14 +16,14 @@
 
 package uk.gov.hmrc.entrydeclarationstore.validation.business
 
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.entrydeclarationstore.validation.ValidationError
 import uk.gov.hmrc.entrydeclarationstore.validation.business.Assert.CompilationContext
 
 class AssertValidatorSpec extends AnyWordSpec {
 
-  implicit val compilationContext: CompilationContext = CompilationContext("pXXX")
+  given compilationContext: CompilationContext = CompilationContext("pXXX")
 
   "AssertValidator" must {
     "return None if the test is true" in {

@@ -16,8 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.models.json
 
-import cats.syntax.all._
-import com.lucidchart.open.xtract.XmlReader._
+import cats.syntax.all.*
 import com.lucidchart.open.xtract.{XmlReader, __}
 import play.api.libs.json.{Json, Writes}
 
@@ -39,5 +38,5 @@ object IdentityOfMeansOfCrossingBorder {
       (__ \ languagePath).read[String].optional
     ).mapN(apply)
 
-  implicit val writes: Writes[IdentityOfMeansOfCrossingBorder] = Json.writes[IdentityOfMeansOfCrossingBorder]
+  given writes: Writes[IdentityOfMeansOfCrossingBorder] = Json.writes[IdentityOfMeansOfCrossingBorder]
 }

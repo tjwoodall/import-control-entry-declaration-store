@@ -21,7 +21,7 @@ import java.time.{Duration, Instant}
 
 import org.scalamock.handlers.CallHandler
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.entrydeclarationstore.logging.LoggingContext
 import uk.gov.hmrc.entrydeclarationstore.models.{TrafficSwitchState, TrafficSwitchStatus}
@@ -56,8 +56,8 @@ class TrafficSwitchServiceSpec extends AnyWordSpec with ScalaFutures with MockRe
       MockTrafficSwitchRepo.getTrafficSwitchStatus returns Future.successful(trafficSwitchStatus(trafficFlow))
   }
 
-  implicit val lc: LoggingContext = LoggingContext()
-  implicit val hc: HeaderCarrier  = HeaderCarrier()
+  given lc: LoggingContext = LoggingContext()
+  given hc: HeaderCarrier  = HeaderCarrier()
 
   "TrafficSwitchService" when {
 

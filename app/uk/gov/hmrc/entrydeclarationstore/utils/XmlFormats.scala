@@ -26,8 +26,8 @@ trait XmlFormats[A] {
 
 object XmlFormats {
 
-  implicit class XmlFormatsExtensions[A: XmlFormats](a: A) {
-    def toXml: Node = implicitly[XmlFormats[A]].toXml(a)
+  extension [A: XmlFormats](a: A) {
+    def toXml: Node = summon[XmlFormats[A]].toXml(a)
   }
 
 }

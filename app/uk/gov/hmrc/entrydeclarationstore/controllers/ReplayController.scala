@@ -17,12 +17,13 @@
 package uk.gov.hmrc.entrydeclarationstore.controllers
 
 import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import play.api.mvc.{Action, AnyContent, ControllerComponents, Request}
 import uk.gov.hmrc.entrydeclarationstore.models.ReplayLimit
 import uk.gov.hmrc.entrydeclarationstore.orchestrators.ReplayOrchestrator
 import uk.gov.hmrc.entrydeclarationstore.services.{ReplayStateRetrievalService, SubmissionReplayService}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-import uk.gov.hmrc.entrydeclarationstore.models.ReplayState.Implicits._
+import uk.gov.hmrc.entrydeclarationstore.models.ReplayState.Implicits.replayStateFormat
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -32,10 +33,13 @@ class ReplayController @Inject()(
   replayOrchestrator: ReplayOrchestrator,
   submissionReplayService: SubmissionReplayService,
   replayService: ReplayStateRetrievalService
-)(implicit ec: ExecutionContext)
+)(using ec: ExecutionContext)
     extends BackendController(cc) {
 
-  val startReplay: Action[JsValue] = Action.async(parse.json) { implicit request =>
+  val startReplay: Action[JsValue] = Action.async(parse.json) { request =>
+
+    given Request[JsValue] = request
+
     request.body.validate[ReplayLimit] match {
       case JsSuccess(replayLimit, _) =>
         val (futureReplayInitResult, _) =

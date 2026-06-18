@@ -18,7 +18,7 @@ package uk.gov.hmrc.entrydeclarationstore.nrs
 
 import com.codahale.metrics.MetricRegistry
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.entrydeclarationstore.logging.LoggingContext
 import uk.gov.hmrc.http.HeaderCarrier
@@ -34,8 +34,8 @@ class NRSServiceSpec extends AnyWordSpec with MockNRSConnector with NRSMetadataT
 
   val nrsSubmission: NRSSubmission = NRSSubmission(nrsMetadataRawPayload, nrsMetadata)
 
-  implicit val hc: HeaderCarrier  = HeaderCarrier()
-  implicit val lc: LoggingContext = LoggingContext("eori", "corrId", "subId")
+  given hc: HeaderCarrier  = HeaderCarrier()
+  given lc: LoggingContext = LoggingContext("eori", "corrId", "subId")
 
   "NRSService" when {
     "NRS submission is successful" must {

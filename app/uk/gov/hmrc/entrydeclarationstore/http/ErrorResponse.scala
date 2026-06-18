@@ -27,7 +27,7 @@ case class ErrorResponse(
 )
 
 object ErrorResponse {
-  implicit val xmlFormats: XmlFormats[ErrorResponse] = new XmlFormats[ErrorResponse] {
+  given xmlFormats: XmlFormats[ErrorResponse] = new XmlFormats[ErrorResponse] {
     override def toXml(a: ErrorResponse): Node =
       // @formatter:off
       <error>

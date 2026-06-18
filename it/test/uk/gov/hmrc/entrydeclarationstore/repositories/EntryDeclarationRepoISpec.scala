@@ -23,18 +23,18 @@ import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.{Assertion, BeforeAndAfterAll}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json._
+import play.api.libs.json.*
 import play.api.test.{DefaultAwaitTimeout, FutureAwaits, Injecting}
 import play.api.{Application, Environment, Mode}
 import uk.gov.hmrc.entrydeclarationstore.housekeeping.HousekeepingScheduler
 import uk.gov.hmrc.entrydeclarationstore.logging.LoggingContext
-import uk.gov.hmrc.entrydeclarationstore.models._
+import uk.gov.hmrc.entrydeclarationstore.models.*
 import uk.gov.hmrc.entrydeclarationstore.utils.ResourceUtils
 
 import java.time.{Clock, Instant, ZoneId}
 import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.util.Random
 
 class EntryDeclarationRepoISpec
@@ -61,7 +61,7 @@ class EntryDeclarationRepoISpec
     )
     .build()
 
-  implicit lazy val materializer: Materializer = inject[Materializer]
+  given materializer: Materializer = inject[Materializer]
 
   lazy val repository: EntryDeclarationRepoImpl = inject[EntryDeclarationRepoImpl]
 
@@ -83,7 +83,7 @@ class EntryDeclarationRepoISpec
   val payload313: JsValue        = ResourceUtils.withInputStreamFor("jsons/313SpecificFields.json")(Json.parse)
   val payload315: JsValue        = ResourceUtils.withInputStreamFor("jsons/315NoOptional.json")(Json.parse)
 
-  implicit val lc: LoggingContext = LoggingContext("eori", "corrId", "subId")
+  given lc: LoggingContext = LoggingContext("eori", "corrId", "subId")
 
   val entryDeclaration313: EntryDeclarationModel = EntryDeclarationModel(
     correlationId313,

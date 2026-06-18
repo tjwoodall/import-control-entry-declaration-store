@@ -26,7 +26,7 @@ import scala.concurrent.ExecutionContext
 
 @Singleton()
 class TrafficSwitchController @Inject()(cc: ControllerComponents, service: TrafficSwitchService)(
-  implicit ec: ExecutionContext)
+  using ec: ExecutionContext)
     extends BackendController(cc) {
 
   def startTrafficFlow: Action[AnyContent] = Action.async { _ =>

@@ -23,5 +23,5 @@ import java.time.Instant
 case class AmendmentRejectionEnrichment(eisSubmissionDateTime: Option[Instant], payload: JsValue)
 
 object AmendmentRejectionEnrichment {
-  implicit val jsonFormat: Format[AmendmentRejectionEnrichment] = Json.format[AmendmentRejectionEnrichment]
+  given jsonFormat: Format[AmendmentRejectionEnrichment] = Json.format[AmendmentRejectionEnrichment]
 }

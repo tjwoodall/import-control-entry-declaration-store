@@ -21,5 +21,5 @@ import play.api.libs.json.{JsPath, Reads}
 case class ReplayLimit(value: Option[Int]) extends AnyVal
 
 object ReplayLimit {
-  implicit val reads: Reads[ReplayLimit] = (JsPath \ "limit").readNullable[Int].map(ReplayLimit.apply)
+  given reads: Reads[ReplayLimit] = (JsPath \ "limit").readNullable[Int].map(ReplayLimit.apply)
 }

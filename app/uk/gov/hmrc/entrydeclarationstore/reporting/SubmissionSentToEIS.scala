@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.reporting
 
-import play.api.libs.json._
+import play.api.libs.json.*
 import uk.gov.hmrc.entrydeclarationstore.connectors.EISSendFailure
 import uk.gov.hmrc.entrydeclarationstore.models.MessageType
 import uk.gov.hmrc.entrydeclarationstore.reporting.audit.AuditEvent
@@ -33,9 +33,9 @@ case class SubmissionSentToEIS(
     extends Report
 
 object SubmissionSentToEIS {
-  implicit val eventSources: EventSources[SubmissionSentToEIS] = new EventSources[SubmissionSentToEIS] {
+  given eventSources: EventSources[SubmissionSentToEIS] = new EventSources[SubmissionSentToEIS] {
     override def eventFor(timestamp: Instant, report: SubmissionSentToEIS): Option[Event] = {
-      import report._
+      import report.*
 
       val (eventCode, failureJson) = report.failure match {
         case None    => (EventCode.ENS_TO_EIS, None)
@@ -56,7 +56,7 @@ object SubmissionSentToEIS {
     }
 
     override def auditEventFor(report: SubmissionSentToEIS): Option[AuditEvent] = {
-      import report._
+      import report.*
       val auditEvent = report.failure match {
         case None =>
           AuditEvent(

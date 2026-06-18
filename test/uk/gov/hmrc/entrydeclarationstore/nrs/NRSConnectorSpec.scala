@@ -65,9 +65,9 @@ class NRSConnectorSpec
   var port: Int = _
 
   val actorSystem: ActorSystem              = inject[ActorSystem]
-  implicit val scheduler: Scheduler         = actorSystem.scheduler
-  implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
-  implicit val lc: LoggingContext           = LoggingContext("eori", "corrId", "subId")
+  given scheduler: Scheduler         = actorSystem.scheduler
+  given headerCarrier: HeaderCarrier = HeaderCarrier()
+  given lc: LoggingContext           = LoggingContext("eori", "corrId", "subId")
 
   // Long delays to force a test to timeout if it does retry when we're not expecting it...
   val longDelays = List(10.minutes)

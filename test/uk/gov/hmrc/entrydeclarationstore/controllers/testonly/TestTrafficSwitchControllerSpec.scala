@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.controllers.testonly
 
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Helpers}

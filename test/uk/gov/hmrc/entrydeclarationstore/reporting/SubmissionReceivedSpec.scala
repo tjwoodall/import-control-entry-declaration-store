@@ -18,7 +18,7 @@ package uk.gov.hmrc.entrydeclarationstore.reporting
 
 import java.time.Instant
 
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsObject, JsString, Json}
 import uk.gov.hmrc.entrydeclarationstore.models.MessageType
@@ -43,7 +43,7 @@ class SubmissionReceivedSpec extends AnyWordSpec {
   "SubmissionReceived" must {
     "have the correct associated JSON event" when {
       "no applicationId or clientId headers provided" in {
-        val event = implicitly[EventSources[SubmissionReceived]].eventFor(now, report()).get
+        val event = summon[EventSources[SubmissionReceived]].eventFor(now, report()).get
 
         Json.toJson(event) shouldBe
           Json.parse(s"""
@@ -64,7 +64,7 @@ class SubmissionReceivedSpec extends AnyWordSpec {
       }
       "applcationId header provided" in {
         val event =
-          implicitly[EventSources[SubmissionReceived]].eventFor(now, report(applicationId = Some("someAppId"))).get
+          summon[EventSources[SubmissionReceived]].eventFor(now, report(applicationId = Some("someAppId"))).get
 
         Json.toJson(event) shouldBe
           Json.parse(s"""
@@ -87,7 +87,7 @@ class SubmissionReceivedSpec extends AnyWordSpec {
 
       "clientId header provided" in {
         val event =
-          implicitly[EventSources[SubmissionReceived]].eventFor(now, report(clientId = Some("someClientId"))).get
+          summon[EventSources[SubmissionReceived]].eventFor(now, report(clientId = Some("someClientId"))).get
 
         Json.toJson(event) shouldBe
           Json.parse(s"""
@@ -110,7 +110,7 @@ class SubmissionReceivedSpec extends AnyWordSpec {
 
       "applicationId and clientId headers provided" in {
         val event =
-          implicitly[EventSources[SubmissionReceived]]
+          summon[EventSources[SubmissionReceived]]
             .eventFor(now, report(clientId = Some("someClientId"), applicationId = Some("someAppId")))
             .get
 
@@ -136,7 +136,7 @@ class SubmissionReceivedSpec extends AnyWordSpec {
 
       "mrn provided" in {
         val event =
-          implicitly[EventSources[SubmissionReceived]].eventFor(now, report(mrn = Some("00GB12345678912340"))).get
+          summon[EventSources[SubmissionReceived]].eventFor(now, report(mrn = Some("00GB12345678912340"))).get
 
         Json.toJson(event) shouldBe
           Json.parse(s"""
@@ -159,7 +159,7 @@ class SubmissionReceivedSpec extends AnyWordSpec {
     }
 
     "have the correct associated audit event" in {
-      val event = implicitly[EventSources[SubmissionReceived]].auditEventFor(report()).get
+      val event = summon[EventSources[SubmissionReceived]].auditEventFor(report()).get
 
       event.auditType       shouldBe "SubmissionReceived"
       event.transactionName shouldBe "ENS submission received"

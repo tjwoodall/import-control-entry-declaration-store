@@ -17,7 +17,7 @@
 package uk.gov.hmrc.entrydeclarationstore.models
 
 import play.api.libs.json.{Format, Json, __, Reads, OWrites}
-import play.api.libs.functional.syntax._
+import play.api.libs.functional.syntax.*
 import java.time.Instant
 
 case class ReplayState(
@@ -43,11 +43,11 @@ object ReplayState {
     ReplayState(id, start, total, trigger.getOrElse(ReplayTrigger.Manual), completed, end, success, failure)
 
   object Implicits {
-    implicit val replayStateFormat: Format[ReplayState] = Json.format[ReplayState]
+    given replayStateFormat: Format[ReplayState] = Json.format[ReplayState]
   }
 
   object MongoImplicits {
-    import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats.Implicits._
+    import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats.Implicits.*
     val reads: Reads[ReplayState] = (
         (__ \ "replayId").read[String] and
         (__ \ "startTime").read[Instant] and
@@ -68,7 +68,8 @@ object ReplayState {
         (__ \ "endTime").writeNullable[Instant] and
         (__ \ "successCount").write[Int] and
         (__ \ "failureCount").write[Int]
-      )(unlift(ReplayState.unapply))
-    implicit val mongoFormat: Format[ReplayState] = Format(reads, writes)
+      )(rs => Tuple.fromProductTyped(rs))
+
+    given mongoFormat: Format[ReplayState] = Format(reads, writes)
   }
 }

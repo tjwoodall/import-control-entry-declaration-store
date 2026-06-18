@@ -44,7 +44,7 @@ class TestEntryDeclarationSubmissionController @Inject()(
   reportSender: ReportSender,
   clock: Clock,
   override val metrics: MetricRegistry
-)(implicit ec: ExecutionContext)
+)(using ec: ExecutionContext)
     extends AuthorisedController(cc)
     with Timer
     with Logging {

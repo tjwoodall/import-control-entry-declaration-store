@@ -25,5 +25,5 @@ case class Rule(
 )
 
 object Rule {
-  implicit val reads: Reads[Rule] = Json.reads[Rule]
+  given reads: Reads[Rule] = Json.reads[Rule]
 }

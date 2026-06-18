@@ -17,35 +17,38 @@
 package uk.gov.hmrc.entrydeclarationstore.validation
 
 import com.codahale.metrics.MetricRegistry
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.entrydeclarationstore.config.MockAppConfig
 import uk.gov.hmrc.entrydeclarationstore.logging.LoggingContext
 import uk.gov.hmrc.entrydeclarationstore.models.{ErrorWrapper, RawPayload}
 import uk.gov.hmrc.entrydeclarationstore.utils.XmlFormatConfig
 import uk.gov.hmrc.entrydeclarationstore.validation.business.MockRuleValidator
-import uk.gov.hmrc.entrydeclarationstore.validation.schema.SchemaValidationResult._
-import uk.gov.hmrc.entrydeclarationstore.validation.schema._
+import uk.gov.hmrc.entrydeclarationstore.validation.schema.SchemaValidationResult.*
+import uk.gov.hmrc.entrydeclarationstore.validation.schema.*
 
 import scala.xml.NodeSeq
 
 class ValidationHandlerSpec extends AnyWordSpec with MockSchemaValidator with MockRuleValidator with MockAppConfig {
 
   val metrics: MetricRegistry = new MetricRegistry()
-  implicit val lc: LoggingContext = LoggingContext("eori", "corrId", "subId")
+  given lc: LoggingContext = LoggingContext("eori", "corrId", "subId")
 
-  implicit val xmlFormatConfig: XmlFormatConfig = XmlFormatConfig(responseMaxErrors = 100)
-  MockAppConfig.xmlFormatConfig returns xmlFormatConfig
+  given xmlFormatConfig: XmlFormatConfig = XmlFormatConfig(responseMaxErrors = 100)
 
-  val validationHandler = new ValidationHandlerImpl(
-    mockSchemaValidator,
-    mockRuleValidator,
-    mockRuleValidator,
-    mockRuleValidator,
-    mockRuleValidator,
-    metrics,
-    mockAppConfig
-  )
+  def validationHandler: ValidationHandler = {
+    MockAppConfig.xmlFormatConfig.returns(xmlFormatConfig).anyNumberOfTimes()
+    new ValidationHandlerImpl(
+      mockSchemaValidator,
+      mockRuleValidator,
+      mockRuleValidator,
+      mockRuleValidator,
+      mockRuleValidator,
+      metrics,
+      mockAppConfig
+    )
+  }
+
 
   val mrn: String = "MRN"
   val eori        = "GB12345"
@@ -80,9 +83,9 @@ class ValidationHandlerSpec extends AnyWordSpec with MockSchemaValidator with Mo
   val errors: ValidationErrors = ValidationErrors(Seq(ValidationError("errText", "errType", "123", "errLocation")))
 
   def validationHandlerFor(schemaType: SchemaType, payload: NodeSeq, mrn: Option[String]): Unit = {
-//    val ruleValidator = mrn.map(_ => MockRuleValidator313).getOrElse(MockRuleValidator315)
 
     s"passed xml for $schemaType" when {
+
       "all valid" must {
         "return the payload" in {
           MockAppConfig.optionalFieldsEnabled returns false

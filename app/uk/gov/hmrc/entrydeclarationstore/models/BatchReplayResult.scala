@@ -23,5 +23,5 @@ case class BatchReplayResult(
   failureCount: Int
 )
 object BatchReplayResult {
-  implicit val writes: Writes[BatchReplayResult] = Json.writes[BatchReplayResult]
+  given writes: Writes[BatchReplayResult] = Json.writes[BatchReplayResult]
 }

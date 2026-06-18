@@ -17,7 +17,7 @@
 package uk.gov.hmrc.entrydeclarationstore.utils
 
 import com.codahale.metrics.MetricRegistry
-import org.scalatest.matchers.should.Matchers.{be, convertToAnyShouldWrapper}
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.Logging
 import play.api.test.Helpers.{await, defaultAwaitTimeout}

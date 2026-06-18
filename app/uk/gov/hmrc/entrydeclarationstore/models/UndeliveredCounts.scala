@@ -16,12 +16,12 @@
 
 package uk.gov.hmrc.entrydeclarationstore.models
 
-import play.api.libs.json._
+import play.api.libs.json.*
 
 case class TransportCount(transportMode: String, count: Int)
 
 object TransportCount {
-  implicit val formats: Format[TransportCount] = Json.format[TransportCount]
+  given formats: Format[TransportCount] = Json.format[TransportCount]
 }
 
 case class UndeliveredCounts(totalCount: Int, transportCounts: Option[Seq[TransportCount]]) {
@@ -32,5 +32,5 @@ case class UndeliveredCounts(totalCount: Int, transportCounts: Option[Seq[Transp
 }
 
 object UndeliveredCounts {
-  implicit val formats: Format[UndeliveredCounts] = Json.format[UndeliveredCounts]
+  given formats: Format[UndeliveredCounts] = Json.format[UndeliveredCounts]
 }

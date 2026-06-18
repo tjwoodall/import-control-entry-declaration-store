@@ -21,5 +21,5 @@ import play.api.libs.json.{JsPath, Reads}
 private[repositories] case class SubmissionId(value: String) extends AnyVal
 
 private[repositories] object SubmissionId {
-  implicit val reads: Reads[SubmissionId] = (JsPath \ "submissionId").read[String].map(SubmissionId.apply)
+  given reads: Reads[SubmissionId] = (JsPath \ "submissionId").read[String].map(SubmissionId.apply)
 }

@@ -16,8 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.models.json
 
-import cats.syntax.all._
-import com.lucidchart.open.xtract.XmlReader._
+import cats.syntax.all.*
 import com.lucidchart.open.xtract.{XmlReader, __}
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.entrydeclarationstore.models.{InstantFormatter, MessageType}
@@ -35,7 +34,7 @@ case class Metadata(
 )
 
 object Metadata extends InstantFormatter {
-  implicit def reader(implicit input: InputParameters): XmlReader[Metadata] =
+  given reader(using input: InputParameters): XmlReader[Metadata] =
     (
       (__ \ "MesSenMES3").read[String],
       (__ \ "DatOfPreMES9").read[String],
@@ -58,7 +57,7 @@ object Metadata extends InstantFormatter {
         )
     }
 
-  implicit val writes: Writes[Metadata] = Json.writes[Metadata]
+  given writes: Writes[Metadata] = Json.writes[Metadata]
   val dateRegex: Regex                  = "([0-9]{2})([0-9]{2})([0-9]{2})".r
   val timeRegex: Regex                  = "([0-9]{2})([0-9]{2})".r
 

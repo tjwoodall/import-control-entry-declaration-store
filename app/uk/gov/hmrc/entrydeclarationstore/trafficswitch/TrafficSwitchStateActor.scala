@@ -52,7 +52,7 @@ class TrafficSwitchStateActor(trafficSwitchService: TrafficSwitchService, traffi
     extends Actor
     with Timers with Logging {
 
-  implicit val ec: ExecutionContext = context.dispatcher
+  given ec: ExecutionContext = context.dispatcher
 
   self ! TrafficSwitchStateActor.GetStateFromDatabase
 

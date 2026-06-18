@@ -18,13 +18,13 @@ package uk.gov.hmrc.entrydeclarationstore.utils
 
 import org.apache.pekko.actor.Scheduler
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.concurrent.{ExecutionContext, Future, Promise}
 
 trait Delayer {
 
-  implicit val scheduler: Scheduler
-  implicit val ec: ExecutionContext
+  given scheduler: Scheduler
+  given ec: ExecutionContext
 
   def delay(delay: FiniteDuration): Future[Unit] = {
     val promise = Promise[Unit]()

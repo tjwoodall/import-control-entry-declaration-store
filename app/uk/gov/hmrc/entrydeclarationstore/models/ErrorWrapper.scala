@@ -26,6 +26,6 @@ import scala.xml.{Node, Utility}
   * The primary purpose of this wrapper is so that we can associate an XmlFormats instance
   * with an otherwise unknown error type.
   */
-case class ErrorWrapper[+A](error: A)(implicit xmlFormats: XmlFormats[A]) {
+case class ErrorWrapper[+A](error: A)(using xmlFormats: XmlFormats[A]) {
   def toXml: Node = Utility.trim(xmlFormats.toXml(error))
 }

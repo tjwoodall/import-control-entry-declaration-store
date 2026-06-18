@@ -32,5 +32,5 @@ case class EntryDeclarationModel(
 
 object EntryDeclarationModel extends InstantFormatter{
   import EisSubmissionState.jsonFormat
-  implicit val format: Format[EntryDeclarationModel] = Json.format[EntryDeclarationModel]
+  given format: Format[EntryDeclarationModel] = Json.format[EntryDeclarationModel]
 }

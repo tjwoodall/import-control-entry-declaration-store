@@ -49,7 +49,7 @@ class ReplayStateRepoISpec
   }
   val initialReplayId = "replayId"
 
-  override implicit lazy val app: Application = new GuiceApplicationBuilder()
+  override given app: Application = new GuiceApplicationBuilder()
     .in(Environment.simple(mode = Mode.Dev))
     .configure("metrics.enabled" -> "false")
     .build()

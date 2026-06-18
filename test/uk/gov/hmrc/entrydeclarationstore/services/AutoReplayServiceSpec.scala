@@ -17,7 +17,7 @@
 package uk.gov.hmrc.entrydeclarationstore.services
 
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.entrydeclarationstore.orchestrators.MockReplayOrchestrator
 import uk.gov.hmrc.entrydeclarationstore.repositories.{MockAutoReplayRepository, MockEntryDeclarationRepo}
@@ -26,8 +26,8 @@ import uk.gov.hmrc.entrydeclarationstore.models.{ReplayResult, ReplayTrigger, Tr
 import uk.gov.hmrc.entrydeclarationstore.trafficswitch.TrafficSwitchConfig
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.concurrent.duration._
-import java.time._
+import scala.concurrent.duration.*
+import java.time.*
 
 class AutoReplayServiceSpec
     extends AnyWordSpec

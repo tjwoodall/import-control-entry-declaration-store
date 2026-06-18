@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.reporting
 
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.mvc.Headers
 
@@ -27,7 +27,7 @@ class ClientInfoSpec extends AnyWordSpec {
       val clientId      = "someClientId"
 
       "work when headers present" in {
-        implicit val headers: Headers = Headers("X-Application-Id" -> applicationId, "X-Client-Id" -> clientId)
+        given headers: Headers = Headers("X-Application-Id" -> applicationId, "X-Client-Id" -> clientId)
 
         ClientInfo(ClientType.GGW) shouldBe ClientInfo(
           ClientType.GGW,
@@ -36,13 +36,13 @@ class ClientInfoSpec extends AnyWordSpec {
       }
 
       "work when headers missing" in {
-        implicit val headers: Headers = Headers()
+        given headers: Headers = Headers()
 
         ClientInfo(ClientType.GGW) shouldBe ClientInfo(ClientType.GGW, clientId = None, applicationId = None)
       }
 
       "be case insensitive to header names" in {
-        implicit val headers: Headers = Headers("x-application-ID" -> applicationId, "x-client-ID" -> clientId)
+        given headers: Headers = Headers("x-application-ID" -> applicationId, "x-client-ID" -> clientId)
 
         ClientInfo(ClientType.GGW) shouldBe ClientInfo(
           ClientType.GGW,

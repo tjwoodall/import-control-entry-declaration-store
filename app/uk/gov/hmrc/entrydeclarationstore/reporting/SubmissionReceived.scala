@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.reporting
 
-import play.api.libs.json._
+import play.api.libs.json.*
 import uk.gov.hmrc.entrydeclarationstore.models.MessageType
 import uk.gov.hmrc.entrydeclarationstore.reporting.audit.AuditEvent
 import uk.gov.hmrc.entrydeclarationstore.reporting.events.{Event, EventCode}
@@ -37,10 +37,10 @@ case class SubmissionReceived(
 ) extends Report
 
 object SubmissionReceived {
-  implicit val eventSources: EventSources[SubmissionReceived] = new EventSources[SubmissionReceived] {
+  given eventSources: EventSources[SubmissionReceived] = new EventSources[SubmissionReceived] {
 
     override def eventFor(timestamp: Instant, report: SubmissionReceived): Option[Event] = {
-      import report._
+      import report.*
 
       val event = Event(
         eventCode      = EventCode.ENS_REC,
@@ -64,7 +64,7 @@ object SubmissionReceived {
     }
 
     override def auditEventFor(report: SubmissionReceived): Option[AuditEvent] = {
-      import report._
+      import report.*
       val auditEvent = AuditEvent(
         auditType       = "SubmissionReceived",
         transactionName = "ENS submission received",

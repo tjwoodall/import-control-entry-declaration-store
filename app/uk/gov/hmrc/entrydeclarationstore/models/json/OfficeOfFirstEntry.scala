@@ -16,8 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.models.json
 
-import cats.syntax.all._
-import com.lucidchart.open.xtract.XmlReader._
+import cats.syntax.all.*
 import com.lucidchart.open.xtract.{XmlReader, __}
 import play.api.libs.json.{Json, Writes}
 
@@ -29,12 +28,12 @@ case class OfficeOfFirstEntry(
 )
 
 object OfficeOfFirstEntry {
-  implicit val reader: XmlReader[OfficeOfFirstEntry] = (
+  given reader: XmlReader[OfficeOfFirstEntry] = (
     (__ \ "RefNumCUSOFFFENT731").read[String],
     (__ \ "ExpDatOfArrFIRENT733").read[String]
   ).mapN((reference, expectedDateTimeOfArrival) => OfficeOfFirstEntry(reference, datetime(expectedDateTimeOfArrival)))
 
-  implicit val writes: Writes[OfficeOfFirstEntry] = Json.writes[OfficeOfFirstEntry]
+  given writes: Writes[OfficeOfFirstEntry] = Json.writes[OfficeOfFirstEntry]
   val datetimeRegex: Regex                        = "([0-9]{4})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})".r
 
   def datetime(datetime: String): String = datetime match {

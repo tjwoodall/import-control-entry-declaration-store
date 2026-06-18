@@ -27,22 +27,22 @@ trait MockPagerDutyLogger extends TestSuite with MockFactory {
 
   object MockPagerDutyLogger {
     def logEISFailure: CallHandler[Unit] =
-      (mockPagerDutyLogger.logEISFailure(_: HttpResponse)(_: LoggingContext)).verify(*, *)
+      (mockPagerDutyLogger.logEISFailure(_: HttpResponse)(using _: LoggingContext)).verify(*, *)
 
     def logEISTimeout: CallHandler[Unit] =
-      (mockPagerDutyLogger.logEISTimeout()(_: LoggingContext)).verify(*)
+      (mockPagerDutyLogger.logEISTimeout()(using _: LoggingContext)).verify(*)
 
     def logEISError: CallHandler[Unit] =
-      (mockPagerDutyLogger.logEISError(_: Throwable)(_: LoggingContext)).verify(*, *)
+      (mockPagerDutyLogger.logEISError(_: Throwable)(using _: LoggingContext)).verify(*, *)
 
     def logEISTrafficSwitchFlowStopped: CallHandler[Unit] =
-      (mockPagerDutyLogger.logEISTrafficSwitchFlowStopped()(_: LoggingContext)).verify(*)
+      (mockPagerDutyLogger.logEISTrafficSwitchFlowStopped()(using _: LoggingContext)).verify(*)
 
     def logEventFailure: CallHandler[Unit] =
-      (mockPagerDutyLogger.logEventFailure(_: Int)(_: LoggingContext)).verify(*, *)
+      (mockPagerDutyLogger.logEventFailure(_: Int)(using _: LoggingContext)).verify(*, *)
 
     def logEventError: CallHandler[Unit] =
-      (mockPagerDutyLogger.logEventError(_: Throwable)(_: LoggingContext)).verify(*, *)
+      (mockPagerDutyLogger.logEventError(_: Throwable)(using _: LoggingContext)).verify(*, *)
   }
 
 }

@@ -17,12 +17,12 @@
 package uk.gov.hmrc.entrydeclarationstore.repositories
 
 import uk.gov.hmrc.mongo.play.json.formats.MongoFormats
-import org.mongodb.scala._
-import org.mongodb.scala.model.Filters._
-import org.mongodb.scala.model.Sorts._
-import org.mongodb.scala.model.Updates._
-import org.mongodb.scala.model._
-import uk.gov.hmrc.mongo._
+import org.mongodb.scala.*
+import org.mongodb.scala.model.Filters.*
+import org.mongodb.scala.model.Sorts.*
+import org.mongodb.scala.model.Updates.*
+import org.mongodb.scala.model.*
+import uk.gov.hmrc.mongo.*
 import uk.gov.hmrc.mongo.play.json.{Codecs, PlayMongoRepository}
 import uk.gov.hmrc.entrydeclarationstore.config.AppConfig
 import uk.gov.hmrc.entrydeclarationstore.models.{ReplayTrigger, ReplayState}
@@ -46,7 +46,7 @@ trait ReplayStateRepo {
 @Singleton
 class ReplayStateRepoImpl @Inject()
   (config: AppConfig)
-  (implicit mongo: MongoComponent,
+  (using mongo: MongoComponent,
    ec: ExecutionContext) extends PlayMongoRepository[ReplayState](
   collectionName = "replayState",
   mongoComponent = mongo,
@@ -120,7 +120,7 @@ class ReplayStateRepoImpl @Inject()
         case _ => None
       }
 
-override def setState(replayState: ReplayState): Future[Unit] =
+  override def setState(replayState: ReplayState): Future[Unit] =
     Mdc
       .preservingMdc(
         collection

@@ -34,10 +34,10 @@ import scala.util.Try
   * but which must be manually started again by updating the external state.
   */
 class TrafficSwitch @Inject()(trafficSwitchActorFactory: TrafficSwitchActor.Factory, trafficSwitchConfig: TrafficSwitchConfig)(
-  implicit actorSystem: ActorSystem, ec: ExecutionContext) {
-  implicit val timeout: Timeout = Timeout(trafficSwitchConfig.callTimeout.plus(2.seconds))
+  using actorSystem: ActorSystem, ec: ExecutionContext) {
+  given timeout: Timeout = Timeout(trafficSwitchConfig.callTimeout.plus(2.seconds))
   val trafficSwitchActor: ActorRef = trafficSwitchActorFactory.apply(actorSystem)
 
-  def withTrafficSwitch[T: ClassTag](body: => Future[T], defineFailureFn: Try[T] => Boolean): Future[T] =
+  def withTrafficSwitch[T](body: => Future[T], defineFailureFn: Try[T] => Boolean): Future[T] =
     (trafficSwitchActor ? MakeCall(_ => body, defineFailureFn)).mapTo[CallResult[T]].map(_.value)
 }

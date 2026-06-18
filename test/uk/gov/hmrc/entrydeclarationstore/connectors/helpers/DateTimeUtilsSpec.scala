@@ -27,7 +27,7 @@ import org.scalatest.wordspec.AnyWordSpec
 
 class DateTimeUtilsSpec extends AnyWordSpec with Matchers with Inspectors {
 
-  implicit val arbInstant: Arbitrary[Instant] = Arbitrary(
+  given arbInstant: Arbitrary[Instant] = Arbitrary(
     for {
       year  <- Gen.choose(2000, 2100)
       month <- Gen.choose(1, 12)

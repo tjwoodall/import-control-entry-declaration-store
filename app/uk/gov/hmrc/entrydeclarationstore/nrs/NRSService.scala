@@ -24,12 +24,12 @@ import uk.gov.hmrc.http.HeaderCarrier
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class NRSService @Inject()(nrsConnector: NRSConnector, override val metrics: MetricRegistry)(implicit ec: ExecutionContext)
+class NRSService @Inject()(nrsConnector: NRSConnector, override val metrics: MetricRegistry)(using ec: ExecutionContext)
     extends Timer
     with Logging {
 
   def submit(
-    nrsSubmission: NRSSubmission)(implicit hc: HeaderCarrier, lc: LoggingContext): Future[Option[NRSResponse]] =
+    nrsSubmission: NRSSubmission)(using hc: HeaderCarrier, lc: LoggingContext): Future[Option[NRSResponse]] =
     timeFuture("NRS Submission", "nrs.submission") {
       nrsConnector.submit(nrsSubmission).map(_.toOption)
     }

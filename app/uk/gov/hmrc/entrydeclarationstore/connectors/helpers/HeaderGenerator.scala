@@ -17,7 +17,7 @@
 package uk.gov.hmrc.entrydeclarationstore.connectors.helpers
 
 import play.api.Logging
-import play.api.http.HeaderNames._
+import play.api.http.HeaderNames.*
 import play.api.http.MimeTypes
 import uk.gov.hmrc.entrydeclarationstore.config.AppConfig
 import uk.gov.hmrc.http.HeaderCarrier
@@ -28,7 +28,7 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class HeaderGenerator @Inject()(clock: Clock, appConfig: AppConfig) extends Logging {
 
-  def headersForEIS(submissionId: String)(implicit hc: HeaderCarrier): Seq[(String, String)] = {
+  def headersForEIS(submissionId: String)(using hc: HeaderCarrier): Seq[(String, String)] = {
     val upperCasedAllowList = appConfig.headerAllowlist.map(_.toUpperCase)
     val allowListedHeaders = (hc.extraHeaders ++ hc.otherHeaders).filter {
       case (name, _) => upperCasedAllowList contains name.toUpperCase

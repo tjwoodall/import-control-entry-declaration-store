@@ -23,17 +23,17 @@ trait HasEmpty {
 }
 
 trait ReaderUtils {
-  implicit def seqXmlReader[A](implicit r: XmlReader[A]): XmlReader[Seq[A]] =
+
+  given seqXmlReader[A](using r: XmlReader[A]): XmlReader[Seq[A]] =
     XmlReader { xml =>
       ParseResult.combine(xml.map(r.read))
     }
 
-  implicit class XmlReaderSeqExtensions[A](r: XmlReader[Seq[A]]) {
+  extension [A](r: XmlReader[Seq[A]]) {
     def mapToNoneIfEmpty: XmlReader[Option[Seq[A]]] = r.map(as => if (as.isEmpty) None else Some(as))
   }
 
-  implicit class XmlReaderEmptyObjectExtensions[A <: HasEmpty](r: XmlReader[A]) {
-    def mapToNoneIfEmpty: XmlReader[Option[A]] = r.map(a => if (a.isEmpty) None else Some(a))
+  extension [A <: HasEmpty](r: XmlReader[A]) {
+    def mapToNoneIfIsEmpty: XmlReader[Option[A]] = r.map(a => if (a.isEmpty) None else Some(a))
   }
-
 }

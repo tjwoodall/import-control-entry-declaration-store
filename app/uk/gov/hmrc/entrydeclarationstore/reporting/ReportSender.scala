@@ -31,13 +31,13 @@ class ReportSender @Inject()(
   auditHandler: AuditHandler,
   eventConnector: EventConnector,
   clock: Clock,
-  override val metrics: MetricRegistry)(implicit ec: ExecutionContext)
+  override val metrics: MetricRegistry)(using ec: ExecutionContext)
     extends Timer
     with Logging {
   def sendReport[R: EventSources](timestamp: Instant, report: R)(
-    implicit hc: HeaderCarrier,
+    using hc: HeaderCarrier,
     lc: LoggingContext): Future[Unit] = {
-    val eventSources: EventSources[R] = implicitly
+    val eventSources: EventSources[R] = summon
 
     // Note: auditing is performed asynchronously
     eventSources
@@ -50,15 +50,15 @@ class ReportSender @Inject()(
     }
   }
 
-  def sendReport[R: EventSources](report: R)(implicit hc: HeaderCarrier, lc: LoggingContext): Future[Unit] =
+  def sendReport[R: EventSources](report: R)(using hc: HeaderCarrier, lc: LoggingContext): Future[Unit] =
     sendReport(Instant.now(clock), report)
 
-  private def audit[R: EventSources](event: AuditEvent)(implicit hc: HeaderCarrier) =
+  private def audit[R](event: AuditEvent)(using hc: HeaderCarrier) =
     timeFuture("ReportSender audit", "reporting.audit") {
       auditHandler.audit(event)
     }
 
-  private def sendEvent[R: EventSources](event: Event)(implicit hc: HeaderCarrier, lc: LoggingContext) =
+  private def sendEvent[R](event: Event)(using hc: HeaderCarrier, lc: LoggingContext) =
     timeFuture("ReportSender send event", "reporting.sendEvent") {
       eventConnector.sendEvent(event)
     }

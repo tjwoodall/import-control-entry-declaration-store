@@ -16,8 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.models.json
 
-import cats.syntax.all._
-import com.lucidchart.open.xtract.XmlReader._
+import cats.syntax.all.*
 import com.lucidchart.open.xtract.{XmlReader, __}
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.entrydeclarationstore.utils.ReaderUtils
@@ -35,7 +34,7 @@ case class Itinerary(
 )
 
 object Itinerary extends ReaderUtils {
-  implicit val reader: XmlReader[Itinerary] = (
+  given reader: XmlReader[Itinerary] = (
     (__ \ "HEAHEA" \ "TraModAtBorHEA76").read[String],
     (__ \ "HEAHEA")
       .read(
@@ -47,10 +46,10 @@ object Itinerary extends ReaderUtils {
     (__ \ "HEAHEA" \ "ConRefNumHEA").read[String].optional,
     (__ \ "HEAHEA")
       .read(Loading.reader("PlaLoaGOOITE334", "PlaLoaGOOITE334LNG", "PlaUnlGOOITE334", "CodPlUnHEA357LNG"))
-      .mapToNoneIfEmpty,
+      .mapToNoneIfIsEmpty,
     (__ \ "ITI" \ "CouOfRouCodITI1").read[Seq[String]].mapToNoneIfEmpty,
     (__ \ "CUSOFFFENT730").read[OfficeOfFirstEntry],
     (__ \ "CUSOFFSENT740" \ "RefNumSUBENR909").read[Seq[String]].mapToNoneIfEmpty
   ).mapN(apply)
-  implicit val writes: Writes[Itinerary] = Json.writes[Itinerary]
+  given writes: Writes[Itinerary] = Json.writes[Itinerary]
 }

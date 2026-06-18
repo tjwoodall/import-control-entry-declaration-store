@@ -26,7 +26,7 @@ import uk.gov.hmrc.entrydeclarationstore.housekeeping.{Housekeeper, Housekeeping
 import uk.gov.hmrc.entrydeclarationstore.nrs.{NRSConnector, NRSConnectorImpl}
 import uk.gov.hmrc.entrydeclarationstore.orchestrators.{ReplayLock, ReplayLockImpl}
 import uk.gov.hmrc.entrydeclarationstore.reporting.events.{EventConnector, EventConnectorImpl}
-import uk.gov.hmrc.entrydeclarationstore.repositories._
+import uk.gov.hmrc.entrydeclarationstore.repositories.*
 import uk.gov.hmrc.entrydeclarationstore.services.{AutoReplayService, EntryDeclarationStore, EntryDeclarationStoreImpl, HousekeepingService}
 import uk.gov.hmrc.entrydeclarationstore.trafficswitch.{TrafficSwitchActor, TrafficSwitchConfig}
 import uk.gov.hmrc.entrydeclarationstore.utils.ResourceUtils

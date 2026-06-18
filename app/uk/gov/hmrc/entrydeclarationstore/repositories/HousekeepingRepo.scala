@@ -18,10 +18,10 @@ package uk.gov.hmrc.entrydeclarationstore.repositories
 
 import play.api.Logger
 import uk.gov.hmrc.mongo.play.json.formats.MongoFormats
-import org.mongodb.scala.model.Filters._
-import org.mongodb.scala.model.Updates._
-import org.mongodb.scala.model._
-import uk.gov.hmrc.mongo._
+import org.mongodb.scala.model.Filters.*
+import org.mongodb.scala.model.Updates.*
+import org.mongodb.scala.model.*
+import uk.gov.hmrc.mongo.*
 import uk.gov.hmrc.mongo.play.json.{Codecs, PlayMongoRepository}
 import uk.gov.hmrc.entrydeclarationstore.models.HousekeepingStatus
 import uk.gov.hmrc.mdc.Mdc

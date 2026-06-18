@@ -17,15 +17,15 @@
 package uk.gov.hmrc.entrydeclarationstore.repositories
 
 import play.api.Logging
-import org.mongodb.scala.model.Filters._
-import org.mongodb.scala.model.Updates._
-import org.mongodb.scala.model._
-import uk.gov.hmrc.mongo._
+import org.mongodb.scala.model.Filters.*
+import org.mongodb.scala.model.Updates.*
+import org.mongodb.scala.model.*
+import uk.gov.hmrc.mongo.*
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.entrydeclarationstore.models._
+import uk.gov.hmrc.entrydeclarationstore.models.*
 import uk.gov.hmrc.mdc.Mdc
 
 trait AutoReplayRepository {
@@ -35,8 +35,8 @@ trait AutoReplayRepository {
 }
 
 @Singleton
-class AutoReplayRepositoryImpl @Inject()(
-  implicit mongo: MongoComponent,
+class AutoReplayRepositoryImpl @Inject()()(
+  using mongo: MongoComponent,
   ec: ExecutionContext
 ) extends PlayMongoRepository[AutoReplayRepoStatus](
       collectionName = "auto-replay-status",

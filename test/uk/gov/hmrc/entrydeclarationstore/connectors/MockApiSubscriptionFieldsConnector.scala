@@ -27,9 +27,9 @@ trait MockApiSubscriptionFieldsConnector extends TestSuite with MockFactory {
   val mockApiSubscriptionFieldsConnector: ApiSubscriptionFieldsConnector = mock[ApiSubscriptionFieldsConnector]
 
   object MockApiSubscriptionFieldsConnector {
-    def getAuthenticatedEoriField(clientId: String)(implicit hc: HeaderCarrier) : CallHandler[Future[Option[String]]] =
+    def getAuthenticatedEoriField(clientId: String)(using hc: HeaderCarrier) : CallHandler[Future[Option[String]]] =
       (mockApiSubscriptionFieldsConnector
-        .getAuthenticatedEoriField(_: String)(_ : HeaderCarrier))
+        .getAuthenticatedEoriField(_: String)(using _ : HeaderCarrier))
         .expects(clientId, hc)
 
   }

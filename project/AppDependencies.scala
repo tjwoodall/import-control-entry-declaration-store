@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import buildinfo.BuildInfo.scalaVersion
 import sbt.*
 
 object AppDependencies {
@@ -25,12 +26,14 @@ object AppDependencies {
     "com.github.java-json-tools"   %  "json-schema-validator"     % "2.2.14",
     "uk.gov.hmrc.mongo"            %% "hmrc-mongo-play-30"        % mongoVersion,
     "uk.gov.hmrc"                  %% "bootstrap-backend-play-30" % bootstrapVersion,
-    "org.typelevel"                %% "cats-core"                 % "2.13.0",
     "org.scala-lang.modules"       %% "scala-xml"                 % "2.4.0",
-    "com.lucidchart"               %% "xtract"                    % "2.3.0",
+    // lucidchart is not available for Scala 3
+    ("com.lucidchart"               %% "xtract"                    % "2.3.0").cross(CrossVersion.for3Use2_13)
+      .exclude("org.scala-lang.modules", "scala-xml_2.13")
+      .exclude("org.scala-lang.modules", "scala-collection-compat_2.13"),
     "org.apache.groovy"             %  "groovy"                   % "5.0.6",
-    "com.chuusai"                  %% "shapeless"                 % "2.3.13",
-    "com.fasterxml.jackson.module" %% "jackson-module-scala"      % "2.22.0"
+    "com.fasterxml.jackson.module" %% "jackson-module-scala"      % "2.22.0",
+    "org.scala-lang.modules"       %% "scala-collection-compat"   % "2.14.0"
   )
 
   val test: Seq[ModuleID] = Seq(

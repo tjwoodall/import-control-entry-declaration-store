@@ -25,13 +25,13 @@ object Retrying {
   private val fibonacci: LazyList[Int] = 1 #:: fibonacci.scanLeft(1)(_ + _)
 
   def fibonacciDelays(initialDelay: FiniteDuration, numRetries: Int): List[FiniteDuration] =
-    fibonacci.take(numRetries).map(i => i * initialDelay).toList
+    fibonacci.take(numRetries).map(i => initialDelay * i).toList
 }
 
 trait Retrying {
   delayer: Delayer =>
 
-  implicit val ec: ExecutionContext
+  given ec: ExecutionContext
 
   /**
     * Retries an operation returning a future

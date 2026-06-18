@@ -16,8 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.models.json
 
-import cats.syntax.all._
-import com.lucidchart.open.xtract.XmlReader._
+import cats.syntax.all.*
 import com.lucidchart.open.xtract.{XmlReader, __}
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.entrydeclarationstore.utils.ReaderUtils
@@ -32,7 +31,7 @@ case class Parties(
 )
 
 object Parties extends ReaderUtils {
-  implicit val reader: XmlReader[Parties] = (
+  given reader: XmlReader[Parties] = (
     (__ \ "TRACONCO1")
       .read(
         Trader.reader(
@@ -40,7 +39,7 @@ object Parties extends ReaderUtils {
           Address.reader("StrAndNumCO122", "CitCO124", "PosCodCO123", "CouCO125"),
           "NADLNGCO",
           "TINCO159"))
-      .mapToNoneIfEmpty,
+      .mapToNoneIfIsEmpty,
     (__ \ "TRACONCE1")
       .read(
         Trader.reader(
@@ -48,7 +47,7 @@ object Parties extends ReaderUtils {
           Address.reader("StrAndNumCE122", "CitCE124", "PosCodCE123", "CouCE125"),
           "NADLNGCE",
           "TINCE159"))
-      .mapToNoneIfEmpty,
+      .mapToNoneIfIsEmpty,
     (__ \ "PERLODSUMDEC").read(
       Trader.reader(
         "NamPLD1",
@@ -62,7 +61,7 @@ object Parties extends ReaderUtils {
           Address.reader("StrAndNumTRE1", "CitTRE1", "PosCodTRE1", "CouCodTRE1"),
           "TRAREPLNG",
           "TINTRE1"))
-      .mapToNoneIfEmpty,
+      .mapToNoneIfIsEmpty,
     (__ \ "TRACARENT601")
       .read(
         Trader.reader(
@@ -71,7 +70,7 @@ object Parties extends ReaderUtils {
           "TRACARENT601LNG",
           "TINTRACARENT602"
         ))
-      .mapToNoneIfEmpty,
+      .mapToNoneIfIsEmpty,
     (__ \ "NOTPAR670")
       .read(
         Trader.reader(
@@ -79,7 +78,7 @@ object Parties extends ReaderUtils {
           Address.reader("StrNumNOTPAR673", "CitNOTPAR674", "PosCodNOTPAR676", "CouCodNOTPAR675"),
           "NOTPAR670LNG",
           "TINNOTPAR671"))
-      .mapToNoneIfEmpty
+      .mapToNoneIfIsEmpty
   ).mapN(apply)
-  implicit val writes: Writes[Parties] = Json.writes[Parties]
+  given writes: Writes[Parties] = Json.writes[Parties]
 }

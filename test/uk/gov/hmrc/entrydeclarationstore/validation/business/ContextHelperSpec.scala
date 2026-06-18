@@ -19,7 +19,7 @@ package uk.gov.hmrc.entrydeclarationstore.validation.business
 import java.lang
 
 import groovy.lang.Closure
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.entrydeclarationstore.validation.business.Assert.CompilationContext
 import uk.gov.hmrc.entrydeclarationstore.validation.business.AssertEvaluator.ContextHelper
@@ -28,7 +28,7 @@ import scala.xml.Node
 
 class ContextHelperSpec extends AnyWordSpec {
 
-  implicit val compilationContext: CompilationContext = CompilationContext("pXXX")
+  given compilationContext: CompilationContext = CompilationContext("pXXX")
   // @formatter:off
   val xmlWrapper: XmlWrapper = XmlWrapper(
     <hello>

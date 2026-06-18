@@ -26,7 +26,7 @@ import scala.concurrent.ExecutionContext
 
 @Singleton()
 class EnrichmentController @Inject()(cc: ControllerComponents, service: EnrichmentService)(
-  implicit ec: ExecutionContext)
+  using ec: ExecutionContext)
     extends BackendController(cc) {
 
   def getAcceptanceEnrichment(id: String): Action[AnyContent] = Action.async { _ =>

@@ -32,7 +32,7 @@ import uk.gov.hmrc.entrydeclarationstore.config.AppConfig
 import uk.gov.hmrc.entrydeclarationstore.repositories.LockRepositoryProvider
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.concurrent.{ExecutionContext, Future}
 
 class AutoReplaySchedulerISpec
@@ -48,7 +48,6 @@ class AutoReplaySchedulerISpec
   val runInterval: FiniteDuration  = 1.minute
   val lockDuration: FiniteDuration = 1.second
 
-  //implicit val ec: ExecutionContext = global
   private case object AutoReplay
   private val autoReplayProbe = TestProbe()
 
@@ -59,7 +58,7 @@ class AutoReplaySchedulerISpec
     await(lockRepositoryProvider.removeAll())
 
   private def newAutoReplayer: AutoReplayer =  new AutoReplayer{
-    def replay(replaySequenceCount: Int)(implicit ec: ExecutionContext): Future[Boolean] = {
+    def replay(replaySequenceCount: Int)(using ec: ExecutionContext): Future[Boolean] = {
       autoReplayProbe.ref ! AutoReplay
       Future.successful(false)
     }

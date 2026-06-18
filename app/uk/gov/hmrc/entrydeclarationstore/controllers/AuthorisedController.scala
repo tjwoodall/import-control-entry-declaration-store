@@ -16,11 +16,11 @@
 
 package uk.gov.hmrc.entrydeclarationstore.controllers
 
-import play.api.mvc._
+import play.api.mvc.*
 import uk.gov.hmrc.entrydeclarationstore.models.StandardError
 import uk.gov.hmrc.entrydeclarationstore.services.{AuthService, UserDetails}
 import uk.gov.hmrc.entrydeclarationstore.utils.Timer
-import uk.gov.hmrc.entrydeclarationstore.utils.XmlFormats._
+import uk.gov.hmrc.entrydeclarationstore.utils.XmlFormats.*
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
@@ -38,15 +38,15 @@ abstract class AuthorisedController(cc: ControllerComponents) extends BackendCon
 
       override def parser: BodyParser[AnyContent] = cc.parsers.defaultBodyParser
 
-      implicit override protected def executionContext: ExecutionContext = cc.executionContext
+      override given executionContext: ExecutionContext = cc.executionContext
 
       private def error(err: StandardError) =
         Future.successful(Status(err.status)(err.toXml))
 
       override def invokeBlock[A](request: Request[A], block: UserRequest[A] => Future[Result]): Future[Result] =
         timeFuture("Handle authentication", "handleSubmissionController.authentication") {
-          implicit val headerCarrier: HeaderCarrier = hc(request)
-          implicit val headers: Headers             = request.headers
+          given headerCarrier: HeaderCarrier = hc(request)
+          given headers: Headers             = request.headers
 
           authService.authenticate.flatMap {
             case Some(userDetails) => block(UserRequest(request, userDetails))

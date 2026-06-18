@@ -109,7 +109,7 @@ object AssertEvaluator extends Logging {
     def evaluate: Boolean
   }
 
-  def createAssertEvaluator(assert: Assert)(implicit compilationContext: CompilationContext): AssertEvaluator = {
+  def createAssertEvaluator(assert: Assert)(using compilationContext: CompilationContext): AssertEvaluator = {
     val className = s"ContextualAssertEvaluator_${compilationContext.classId}"
 
     val classSource =
@@ -138,7 +138,7 @@ object AssertEvaluator extends Logging {
 
     val constructor = clazz.getConstructor(classOf[ContextNode])
 
-    { ctx: ContextNode =>
+    { (ctx: ContextNode) =>
       val evaluator: ContextualAssertEvaluator = constructor.newInstance(ctx)
 
       try evaluator.evaluate
