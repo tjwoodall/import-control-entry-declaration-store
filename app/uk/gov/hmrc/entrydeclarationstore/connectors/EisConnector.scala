@@ -19,15 +19,16 @@ package uk.gov.hmrc.entrydeclarationstore.connectors
 import org.apache.pekko.actor.Scheduler
 import org.apache.pekko.pattern.CircuitBreakerOpenException
 import play.api.http.Status
-import play.api.http.Status._
+import play.api.http.Status.*
 import play.api.libs.json.Json
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 import uk.gov.hmrc.entrydeclarationstore.config.AppConfig
 import uk.gov.hmrc.entrydeclarationstore.connectors.helpers.HeaderGenerator
 import uk.gov.hmrc.entrydeclarationstore.logging.{ContextLogger, LoggingContext}
 import uk.gov.hmrc.entrydeclarationstore.models.EntryDeclarationMetadata
 import uk.gov.hmrc.entrydeclarationstore.trafficswitch.TrafficSwitch
 import uk.gov.hmrc.entrydeclarationstore.utils.{Delayer, PagerDutyLogger, Retrying}
-import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 
@@ -38,7 +39,7 @@ import scala.util.{Failure, Success, Try}
 
 trait EisConnector {
   def submitMetadata(metadata: EntryDeclarationMetadata, bypassTrafficSwitch: Boolean)(
-    implicit hc: HeaderCarrier,
+    using hc: HeaderCarrier,
     lc: LoggingContext): Future[Option[EISSendFailure]]
 }
 
@@ -48,7 +49,7 @@ class EisConnectorImpl @Inject()(
                                   trafficSwitch: TrafficSwitch,
                                   appConfig: AppConfig,
                                   pagerDutyLogger: PagerDutyLogger,
-                                  headerGenerator: HeaderGenerator)(implicit val ec: ExecutionContext, val scheduler: Scheduler)
+                                  headerGenerator: HeaderGenerator)(using val ec: ExecutionContext, val scheduler: Scheduler)
     extends EisConnector
     with Retrying
     with Delayer {
@@ -57,14 +58,14 @@ class EisConnectorImpl @Inject()(
 
   private lazy val numRetries = appConfig.eisRetries.length
 
-  implicit val emptyHeaderCarrier: HeaderCarrier = HeaderCarrier()
+  given emptyHeaderCarrier: HeaderCarrier = HeaderCarrier()
 
   def submitMetadata(metadata: EntryDeclarationMetadata, bypassTrafficSwitch: Boolean)(
-    implicit hc: HeaderCarrier,
+    using hc: HeaderCarrier,
     lc: LoggingContext): Future[Option[EISSendFailure]] =
     submit(bypassTrafficSwitch) {
       val isAmendment = metadata.movementReferenceNumber.isDefined
-      val headers     = headerGenerator.headersForEIS(metadata.submissionId)(hc)
+      val headers     = headerGenerator.headersForEIS(metadata.submissionId)
 
       retry(appConfig.eisRetries, retryCondition) { attempt =>
         logSending(attempt)
@@ -74,19 +75,19 @@ class EisConnectorImpl @Inject()(
     }
 
   private def putAmendment(metadata: EntryDeclarationMetadata, headers: Seq[(String, String)])(
-    implicit lc: LoggingContext): Future[HttpResponse] = {
+    using lc: LoggingContext): Future[HttpResponse] = {
     ContextLogger.info(s"sending PUT request to $amendUrl")
     client.put(url"$amendUrl").withBody(Json.toJson(metadata)).setHeader(headers : _*).execute[HttpResponse]
   }
 
   private def postNew(metadata: EntryDeclarationMetadata, headers: Seq[(String, String)])(
-    implicit lc: LoggingContext): Future[HttpResponse] = {
+    using lc: LoggingContext): Future[HttpResponse] = {
     ContextLogger.info(s"sending POST request to $newUrl")
     client.post(url"$newUrl").withBody(Json.toJson(metadata)).setHeader(headers: _*).execute[HttpResponse]
   }
 
   private[connectors] def submit(bypassTrafficSwitch: Boolean)(code: => Future[HttpResponse])(
-    implicit lc: LoggingContext): Future[Option[EISSendFailure]] =
+    using lc: LoggingContext): Future[Option[EISSendFailure]] =
     withTrafficSwitchIfRequired(bypassTrafficSwitch)(code)
       .map { response =>
         val status = response.status
@@ -126,7 +127,7 @@ class EisConnectorImpl @Inject()(
     case Failure(_) => true
   }
 
-  private def retryCondition(implicit lc: LoggingContext): Try[HttpResponse] => Boolean = {
+  private def retryCondition(using lc: LoggingContext): Try[HttpResponse] => Boolean = {
     case Success(response) =>
       val willRetry = appConfig.eisRetryStatusCodes.contains(response.status)
 
@@ -138,13 +139,13 @@ class EisConnectorImpl @Inject()(
     case _ => false
   }
 
-  private def logSending(attempt: Int)(implicit lc: LoggingContext): Unit = {
+  private def logSending(attempt: Int)(using lc: LoggingContext): Unit = {
     val retryInfo = if (attempt > 0) s" retry $attempt of $numRetries" else ""
 
     ContextLogger.info(s"Sending to EIS$retryInfo")
   }
 
-  private def logSendResult(response: HttpResponse, willRetry: Boolean)(implicit lc: LoggingContext): Unit = {
+  private def logSendResult(response: HttpResponse, willRetry: Boolean)(using lc: LoggingContext): Unit = {
     val retryInfo = if (willRetry) " will retry again" else ""
 
     ContextLogger.info(s"Send to EIS returned status code: ${response.status}$retryInfo")

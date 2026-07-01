@@ -19,7 +19,7 @@ package uk.gov.hmrc.entrydeclarationstore.controllers
 import com.codahale.metrics.MetricRegistry
 import org.apache.pekko.util.ByteString
 import play.api.Logging
-import play.api.mvc.{Action, ControllerComponents}
+import play.api.mvc.{Action, ControllerComponents, Request}
 import uk.gov.hmrc.entrydeclarationstore.logging.LoggingContext
 import uk.gov.hmrc.entrydeclarationstore.models.RawPayload
 import uk.gov.hmrc.entrydeclarationstore.models.json.{DeclarationToJsonConverter, InputParameters}
@@ -49,7 +49,7 @@ class EntryDeclarationSubmissionController @Inject()(
   reportSender: ReportSender,
   clock: Clock,
   override val metrics: MetricRegistry
-)(implicit ec: ExecutionContext)
+)(using ec: ExecutionContext)
     extends AuthorisedController(cc)
     with Timer
     with Logging {
@@ -70,10 +70,13 @@ class EntryDeclarationSubmissionController @Inject()(
   def putAmendment(mrn: String): Action[ByteString] = handleSubmission(Some(mrn))
 
   private def handleSubmission(mrn: Option[String]) =
-    authorisedAction().async(parse.byteString) { implicit request =>
+    authorisedAction().async(parse.byteString) { request =>
+
+      given Request[ByteString] = request
+
       val receivedDateTime = Instant.now(clock)
 
-      implicit val lc: LoggingContext = LoggingContext()
+      given lc: LoggingContext = LoggingContext()
 
       val rawPayload = RawPayload(request.body, request.charset)
       val correlationId          = idGenerator.generateCorrelationIdFor(request.userDetails.clientInfo)
@@ -135,9 +138,9 @@ class EntryDeclarationSubmissionController @Inject()(
     }
 
   private def submitToNRSIfReqd(rawPayload: RawPayload, request: UserRequest[_], receivedDateTime: Instant, submissionId: String)(
-    implicit hc: HeaderCarrier): Unit =
+    using hc: HeaderCarrier): Unit =
     request.userDetails.identityData.foreach { identityData =>
-      implicit val lc: LoggingContext = LoggingContext(eori = Some(request.userDetails.eori))
+      given lc: LoggingContext = LoggingContext(eori = Some(request.userDetails.eori))
 
       val submission = NRSSubmission(
         rawPayload,

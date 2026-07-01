@@ -18,10 +18,11 @@ package uk.gov.hmrc.entrydeclarationstore.nrs
 
 import org.apache.pekko.actor.Scheduler
 import play.api.http.Status
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 import uk.gov.hmrc.entrydeclarationstore.config.AppConfig
 import uk.gov.hmrc.entrydeclarationstore.logging.{ContextLogger, LoggingContext}
 import uk.gov.hmrc.entrydeclarationstore.utils.{Delayer, Retrying}
-import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.HttpReads.Implicits.*
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 
@@ -33,23 +34,22 @@ import play.api.libs.json.Json
 
 trait NRSConnector {
   def submit(nrsSubmission: NRSSubmission)(
-    implicit hc: HeaderCarrier,
+    using hc: HeaderCarrier,
     lc: LoggingContext): Future[Either[NRSSubmisionFailure, NRSResponse]]
 }
 
 @Singleton
 class NRSConnectorImpl @Inject()(httpClient: HttpClientV2, appConfig: AppConfig)(
-  implicit val scheduler: Scheduler,
-  val ec: ExecutionContext)
+  using val scheduler: Scheduler, val ec: ExecutionContext)
     extends NRSConnector
     with Retrying
     with Delayer {
-
+  
   private val url: String    = s"${appConfig.nrsBaseUrl}/submission"
   private val apiKey: String = appConfig.nrsApiKey
 
   def submit(nrsSubmission: NRSSubmission)(
-    implicit hc: HeaderCarrier,
+    using hc: HeaderCarrier,
     lc: LoggingContext): Future[Either[NRSSubmisionFailure, NRSResponse]] = {
 
     val retryCondition: Try[Either[NRSSubmisionFailure, NRSResponse]] => Boolean = {

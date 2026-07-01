@@ -31,14 +31,14 @@ trait MockDeclarationToJsonConverter extends TestSuite with MockFactory {
   object MockDeclarationToJsonConverter {
     def convertToJson(xml: NodeSeq): CallHandler[Either[ErrorWrapper[_], JsValue]] =
       (mockDeclarationToJsonConverter
-        .convertToJson(_: NodeSeq, _: InputParameters)(_: LoggingContext)).expects(xml, *, *)
+        .convertToJson(_: NodeSeq, _: InputParameters)(using _: LoggingContext)).expects(xml, *, *)
 
     def convertToModel(xml: NodeSeq): CallHandler[Either[ErrorWrapper[_], EntrySummaryDeclaration]] =
       (mockDeclarationToJsonConverter
-        .convertToModel(_: NodeSeq, _: InputParameters)(_: LoggingContext)).expects(xml, *, *)
+        .convertToModel(_: NodeSeq, _: InputParameters)(using _: LoggingContext)).expects(xml, *, *)
 
     def validateJson(entrySummaryDeclaration: JsValue): CallHandler[Either[ErrorWrapper[_], Unit]] =
       (mockDeclarationToJsonConverter
-        .validateJson(_: JsValue)(_: LoggingContext)).expects(entrySummaryDeclaration, *)
+        .validateJson(_: JsValue)(using _: LoggingContext)).expects(entrySummaryDeclaration, *)
   }
 }

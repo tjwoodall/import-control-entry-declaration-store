@@ -60,9 +60,9 @@ class EventConnectorSpec
 
   val httpClient: HttpClientV2 = inject[HttpClientV2]
 
-  implicit val hc: HeaderCarrier    = HeaderCarrier()
-  implicit val ec: ExecutionContext = ExecutionContext.global
-  implicit val lc: LoggingContext   = LoggingContext("eori", "corrId", "subId")
+  given hc: HeaderCarrier    = HeaderCarrier()
+  given ec: ExecutionContext = ExecutionContext.global
+  given lc: LoggingContext   = LoggingContext("eori", "corrId", "subId")
 
   private val wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().dynamicPort())
 

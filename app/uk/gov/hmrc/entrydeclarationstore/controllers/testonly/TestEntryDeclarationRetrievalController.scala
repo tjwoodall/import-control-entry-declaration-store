@@ -29,7 +29,7 @@ import scala.concurrent.ExecutionContext
 class TestEntryDeclarationRetrievalController @Inject()(
   cc: ControllerComponents,
   service: EntryDeclarationRetrievalService,
-  appConfig: AppConfig)(implicit ec: ExecutionContext)
+  appConfig: AppConfig)(using ec: ExecutionContext)
     extends EisInboundAuthorisedController(cc, appConfig) {
 
   def retrieveDataFromMongo(eori: String, correlationId: String): Action[AnyContent] = Action.async { _ =>

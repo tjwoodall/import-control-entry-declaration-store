@@ -28,10 +28,11 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton()
 class HousekeepingController @Inject()(cc: ControllerComponents, service: HousekeepingService)(
-  implicit ec: ExecutionContext)
+  using ec: ExecutionContext)
     extends BackendController(cc) with Logging {
 
-  def setStatus(): Action[JsValue] = Action.async(parse.json) { implicit request =>
+  def setStatus: Action[JsValue] = Action.async(parse.json) { request =>
+
     request.body.validate[HousekeepingEnabled] match {
       case JsSuccess(HousekeepingEnabled(value), _) =>
         service

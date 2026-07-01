@@ -17,7 +17,7 @@
 package uk.gov.hmrc.entrydeclarationstore.models
 
 import cats.Show
-import cats.implicits._
+import cats.implicits.*
 import play.api.libs.json.Format
 import uk.gov.hmrc.entrydeclarationstore.utils.Enums
 
@@ -29,12 +29,9 @@ object TrafficSwitchState {
 
   case object NotFlowing extends TrafficSwitchState
 
-  implicit private val show: Show[TrafficSwitchState] = Show.show[TrafficSwitchState] {
-    case TrafficSwitchState.Flowing    => "Flowing"
-    case TrafficSwitchState.NotFlowing => "NotFlowing"
-  }
+  private given show: Show[TrafficSwitchState] = Show.show[TrafficSwitchState](_.toString)
 
   def mongoFormatString(trafficSwitchState: TrafficSwitchState): String = trafficSwitchState.show
 
-  implicit val formats: Format[TrafficSwitchState] = Enums.format[TrafficSwitchState]
+  given formats: Format[TrafficSwitchState] = Enums.format[TrafficSwitchState]
 }

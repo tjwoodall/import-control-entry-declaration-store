@@ -26,8 +26,8 @@ import scala.xml.NodeSeq
 
 class DeclarationToJsonConverter {
   def convertToJson(xml: NodeSeq, inputParameters: InputParameters)(
-    implicit lc: LoggingContext): Either[ErrorWrapper[_], JsValue] =
-    XmlReader.of(EntrySummaryDeclaration.reader(inputParameters)).read(xml) match {
+    using lc: LoggingContext): Either[ErrorWrapper[_], JsValue] =
+    XmlReader.of(using EntrySummaryDeclaration.reader(using inputParameters)).read(xml) match {
       case ParseSuccess(entrySummaryDeclaration) => Right(Json.toJson(entrySummaryDeclaration))
       case ParseFailure(errors) =>
         ContextLogger.error("Failed to convert to JSON " + errors)
@@ -38,8 +38,8 @@ class DeclarationToJsonConverter {
     }
 
   def convertToJsonNew(xml: NodeSeq, inputParameters: InputParameters)(
-    implicit lc: LoggingContext): Either[ErrorWrapper[_], JsValue] =
-    XmlReader.of(EntrySummaryDeclarationNew.reader(inputParameters)).read(xml) match {
+    using lc: LoggingContext): Either[ErrorWrapper[_], JsValue] =
+    XmlReader.of(EntrySummaryDeclarationNew.reader(using inputParameters)).read(xml) match {
       case ParseSuccess(entrySummaryDeclaration) => Right(Json.toJson(entrySummaryDeclaration))
       case ParseFailure(errors) =>
         ContextLogger.error("Failed to convert to JSON " + errors)
@@ -50,8 +50,8 @@ class DeclarationToJsonConverter {
     }
 
   def convertToModel(xml: NodeSeq, inputParameters: InputParameters)(
-    implicit lc: LoggingContext): Either[ErrorWrapper[_], EntrySummaryDeclaration] =
-    XmlReader.of(EntrySummaryDeclaration.reader(inputParameters)).read(xml) match {
+    using lc: LoggingContext): Either[ErrorWrapper[_], EntrySummaryDeclaration] =
+    XmlReader.of(EntrySummaryDeclaration.reader(using inputParameters)).read(xml) match {
       case ParseSuccess(entrySummaryDeclaration) => Right(entrySummaryDeclaration)
       case ParseFailure(errors) =>
         ContextLogger.error("Failed to convert to model " + errors)
@@ -62,8 +62,8 @@ class DeclarationToJsonConverter {
     }
 
   def convertToModelNew(xml: NodeSeq, inputParameters: InputParameters)(
-    implicit lc: LoggingContext): Either[ErrorWrapper[_], EntrySummaryDeclarationNew] =
-    XmlReader.of(EntrySummaryDeclarationNew.reader(inputParameters)).read(xml) match {
+    using lc: LoggingContext): Either[ErrorWrapper[_], EntrySummaryDeclarationNew] =
+    XmlReader.of(EntrySummaryDeclarationNew.reader(using inputParameters)).read(xml) match {
       case ParseSuccess(entrySummaryDeclaration) => Right(entrySummaryDeclaration)
       case ParseFailure(errors) =>
         ContextLogger.error("Failed to convert to model " + errors)
@@ -73,9 +73,9 @@ class DeclarationToJsonConverter {
         Left(ErrorWrapper(ServerError))
     }
 
-  def validateJson(entrySummaryDeclaration: JsValue)(implicit lc: LoggingContext): Either[ErrorWrapper[_], Unit] =
+  def validateJson(entrySummaryDeclaration: JsValue)(using lc: LoggingContext): Either[ErrorWrapper[_], Unit] =
     JsonSchemaValidator.validateJSONAgainstSchema(entrySummaryDeclaration)
 
-  def validateJsonNew(entrySummaryDeclaration: JsValue)(implicit lc: LoggingContext): Either[ErrorWrapper[_], Unit] =
+  def validateJsonNew(entrySummaryDeclaration: JsValue)(using lc: LoggingContext): Either[ErrorWrapper[_], Unit] =
     JsonSchemaValidator.validateJSONAgainstSchema(entrySummaryDeclaration, "conf/jsonschemas/EntrySummaryDeclarationNew.json")
 }

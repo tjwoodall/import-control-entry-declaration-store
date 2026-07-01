@@ -19,24 +19,24 @@ package uk.gov.hmrc.entrydeclarationstore.repositories
 import org.apache.pekko.NotUsed
 import org.apache.pekko.stream.Materializer
 import org.apache.pekko.stream.scaladsl.Source
-import play.api.libs.json._
+import play.api.libs.json.*
 import play.api.Logger
 import uk.gov.hmrc.mongo.play.json.formats.MongoFormats
 import org.bson.BsonValue
-import org.mongodb.scala._
-import org.mongodb.scala.model.Projections._
-import org.mongodb.scala.model.Filters._
-import org.mongodb.scala.model.Sorts._
-import org.mongodb.scala.model.Updates._
-import org.mongodb.scala.model._
-import uk.gov.hmrc.mongo._
-import org.mongodb.scala.result._
+import org.mongodb.scala.*
+import org.mongodb.scala.model.Projections.*
+import org.mongodb.scala.model.Filters.*
+import org.mongodb.scala.model.Sorts.*
+import org.mongodb.scala.model.Updates.*
+import org.mongodb.scala.model.*
+import uk.gov.hmrc.mongo.*
+import org.mongodb.scala.result.*
 import uk.gov.hmrc.mongo.play.json.{Codecs, PlayMongoRepository}
 import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.bson.BsonDocument
 import uk.gov.hmrc.entrydeclarationstore.config.AppConfig
 import uk.gov.hmrc.entrydeclarationstore.logging.{ContextLogger, LoggingContext}
-import uk.gov.hmrc.entrydeclarationstore.models._
+import uk.gov.hmrc.entrydeclarationstore.models.*
 import uk.gov.hmrc.mdc.Mdc
 
 import java.time.Instant
@@ -44,15 +44,15 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 trait EntryDeclarationRepo {
-  def save(entryDeclaration: EntryDeclarationModel)(implicit lc: LoggingContext): Future[Boolean]
+  def save(entryDeclaration: EntryDeclarationModel)(using lc: LoggingContext): Future[Boolean]
   def lookupSubmissionId(eori: String, correlationId: String): Future[Option[SubmissionIdLookupResult]]
   def lookupEntryDeclaration(submissionId: String): Future[Option[JsValue]]
-  def setEisSubmissionSuccess(submissionId: String, time: Instant)(implicit lc: LoggingContext): Future[Boolean]
-  def setEisSubmissionFailure(submissionId: String)(implicit lc: LoggingContext): Future[Boolean]
+  def setEisSubmissionSuccess(submissionId: String, time: Instant)(using lc: LoggingContext): Future[Boolean]
+  def setEisSubmissionFailure(submissionId: String)(using lc: LoggingContext): Future[Boolean]
   def lookupAcceptanceEnrichment(submissionId: String): Future[Option[AcceptanceEnrichment]]
   def lookupAmendmentRejectionEnrichment(submissionId: String): Future[Option[AmendmentRejectionEnrichment]]
   def lookupDeclarationRejectionEnrichment(submissionId: String): Future[Option[DeclarationRejectionEnrichment]]
-  def lookupMetadata(submissionId: String)(implicit lc: LoggingContext): Future[Either[MetadataLookupError, ReplayMetadata]]
+  def lookupMetadata(submissionId: String)(using lc: LoggingContext): Future[Either[MetadataLookupError, ReplayMetadata]]
   def setHousekeepingAt(submissionId: String, time: Instant): Future[Boolean]
   def setHousekeepingAt(eori: String, correlationId: String, time: Instant): Future[Boolean]
   def housekeep(now: Instant): Future[Int]
@@ -63,7 +63,7 @@ trait EntryDeclarationRepo {
 
 @Singleton
 class EntryDeclarationRepoImpl @Inject()(appConfig: AppConfig)(
-  implicit mongo: MongoComponent,
+  using mongo: MongoComponent,
   ec: ExecutionContext,
   mat: Materializer
 ) extends PlayMongoRepository[EntryDeclarationPersisted](
@@ -122,7 +122,7 @@ class EntryDeclarationRepoImpl @Inject()(appConfig: AppConfig)(
   // End of Test support FNs
   //
 
-  override def save(entryDeclaration: EntryDeclarationModel)(implicit lc: LoggingContext): Future[Boolean] = {
+  override def save(entryDeclaration: EntryDeclarationModel)(using lc: LoggingContext): Future[Boolean] = {
     val entryDeclarationPersisted = EntryDeclarationPersisted.from(entryDeclaration, appConfig.defaultTtl)
     Mdc
       .preservingMdc(
@@ -169,7 +169,7 @@ class EntryDeclarationRepoImpl @Inject()(appConfig: AppConfig)(
           .headOption()
       ).map(_.map(Codecs.fromBson[EntryDeclarationPayload](_).payload))
 
-  override def setEisSubmissionSuccess(submissionId: String, time: Instant)(implicit lc: LoggingContext): Future[Boolean] =
+  override def setEisSubmissionSuccess(submissionId: String, time: Instant)(using lc: LoggingContext): Future[Boolean] =
     Mdc
       .preservingMdc(
         collection
@@ -193,7 +193,7 @@ class EntryDeclarationRepoImpl @Inject()(appConfig: AppConfig)(
       }
 
 
-  override def setEisSubmissionFailure(submissionId: String)(implicit lc: LoggingContext): Future[Boolean] =
+  override def setEisSubmissionFailure(submissionId: String)(using lc: LoggingContext): Future[Boolean] =
     Mdc
       .preservingMdc(
         collection
@@ -264,7 +264,7 @@ class EntryDeclarationRepoImpl @Inject()(appConfig: AppConfig)(
       })
 
   override def lookupMetadata(submissionId: String)(
-    implicit lc: LoggingContext): Future[Either[MetadataLookupError, ReplayMetadata]] =
+    using lc: LoggingContext): Future[Either[MetadataLookupError, ReplayMetadata]] =
     Mdc
       .preservingMdc(
         collection

@@ -19,7 +19,7 @@ package uk.gov.hmrc.entrydeclarationstore.trafficswitch
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.pattern.{AskTimeoutException, CircuitBreakerOpenException}
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
-import org.scalatest.matchers.should.Matchers.{a, all, an, convertToAnyShouldWrapper}
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -53,7 +53,7 @@ class TrafficSwitchSpec
     .configure("metrics.enabled" -> "false")
     .build()
 
-  implicit val actorSystem: ActorSystem = inject[ActorSystem]
+  given actorSystem: ActorSystem = inject[ActorSystem]
 
   // Note: More detailed testing for different failure functions will be done against the underlying actor
   // here assume any exceptions are failures
@@ -71,7 +71,7 @@ class TrafficSwitchSpec
     val e = new Exception with NoStackTrace
 
     def sayHi: Future[String]           = Future.successful("hi")
-    def throwException: Future[Nothing] = Future.failed(e)
+    def throwException: Future[String]  = Future.failed(e)
 
     def trafficSwitch(trafficSwitchConfig: TrafficSwitchConfig = defaultConfig): TrafficSwitch = {
       MockTrafficSwitchService.getTrafficSwitchState.returns(Future.successful(TrafficSwitchState.Flowing)).noMoreThanOnce()
@@ -159,7 +159,7 @@ class TrafficSwitchSpec
         val ts = new TrafficSwitch(trafficSwitchActorFactory(shortTimeoutConfig), shortTimeoutConfig)
 
         // Will probably fail with a timeout - the crucial thing is that CB will continue to accept calls
-        ts.withTrafficSwitch(throw e, exceptionAsFailure)
+        ts.withTrafficSwitch(Future[String](throw e), exceptionAsFailure)
 
         ts.withTrafficSwitch(sayHi, exceptionAsFailure).futureValue shouldBe "hi"
       }

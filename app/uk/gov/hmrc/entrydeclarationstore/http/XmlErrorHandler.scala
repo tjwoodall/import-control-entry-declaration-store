@@ -17,13 +17,13 @@
 package uk.gov.hmrc.entrydeclarationstore.http
 
 import play.api.http.HttpErrorHandler
-import play.api.http.Status._
-import play.api.mvc.Results._
+import play.api.http.Status.*
+import play.api.mvc.Results.*
 import play.api.mvc.{RequestHeader, Result}
 import play.api.{Configuration, Logging}
 import uk.gov.hmrc.auth.core.AuthorisationException
-import uk.gov.hmrc.entrydeclarationstore.utils.XmlFormats._
-import uk.gov.hmrc.http._
+import uk.gov.hmrc.entrydeclarationstore.utils.XmlFormats.*
+import uk.gov.hmrc.http.*
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendHeaderCarrierProvider
 import uk.gov.hmrc.play.bootstrap.config.HttpAuditEvent
@@ -35,7 +35,7 @@ class XmlErrorHandler @Inject()(
   auditConnector: AuditConnector,
   httpAuditEvent: HttpAuditEvent,
   configuration: Configuration
-)(implicit ec: ExecutionContext)
+)(using ec: ExecutionContext)
     extends HttpErrorHandler
     with BackendHeaderCarrierProvider with Logging {
 
@@ -57,7 +57,7 @@ class XmlErrorHandler @Inject()(
 
   override def onClientError(request: RequestHeader, statusCode: Int, message: String): Future[Result] =
     Future.successful {
-      implicit val headerCarrier: HeaderCarrier = hc(request)
+      given headerCarrier: HeaderCarrier = hc(request)
       statusCode match {
         case NOT_FOUND =>
           auditConnector.sendEvent(
@@ -93,7 +93,7 @@ class XmlErrorHandler @Inject()(
     }
 
   override def onServerError(request: RequestHeader, ex: Throwable): Future[Result] = {
-    implicit val headerCarrier: HeaderCarrier = hc(request)
+    given headerCarrier: HeaderCarrier = hc(request)
 
     val message = s"! Internal server error, for (${request.method}) [${request.uri}] -> "
     val eventType = ex match {

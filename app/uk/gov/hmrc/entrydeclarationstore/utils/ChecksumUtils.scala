@@ -19,11 +19,7 @@ package uk.gov.hmrc.entrydeclarationstore.utils
 import java.security.MessageDigest
 
 object ChecksumUtils {
-
-  def calculateSha256(input: Array[Byte]): String =
-    MessageDigest.getInstance("SHA-256").digest(input).map("%02x".format(_)).mkString
-
-  implicit class ByteArrayWithSha256(bytes: Array[Byte]) {
-    def calculateSha256: String = ChecksumUtils.calculateSha256(bytes)
+  extension (bytes: Array[Byte]) {
+    def calculateSha256: String = MessageDigest.getInstance("SHA-256").digest(bytes).map("%02x".format(_)).mkString
   }
 }

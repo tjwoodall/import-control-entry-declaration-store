@@ -19,7 +19,7 @@ package uk.gov.hmrc.entrydeclarationstore.orchestrators
 import java.util.concurrent.TimeUnit
 import scala.concurrent.duration.Duration
 import uk.gov.hmrc.entrydeclarationstore.config.AppConfig
-import uk.gov.hmrc.mongo.lock._
+import uk.gov.hmrc.mongo.lock.*
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -32,7 +32,7 @@ trait ReplayLock {
 
 @Singleton
 class ReplayLockImpl @Inject()(repo: MongoLockRepository, appConfig: AppConfig)(
-  implicit ec: ExecutionContext)
+  using ec: ExecutionContext)
     extends ReplayLock {
   private val forceReleaseAfter: Duration = Duration(appConfig.replayLockDuration.toMillis, TimeUnit.MILLISECONDS)
 

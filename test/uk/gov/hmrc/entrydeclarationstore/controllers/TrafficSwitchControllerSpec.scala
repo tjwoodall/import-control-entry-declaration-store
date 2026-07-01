@@ -19,7 +19,7 @@ package uk.gov.hmrc.entrydeclarationstore.controllers
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.http.MimeTypes
 import play.api.libs.json.Json

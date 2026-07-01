@@ -18,7 +18,7 @@ package uk.gov.hmrc.entrydeclarationstore.reporting
 
 import java.time.Instant
 
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.entrydeclarationstore.connectors.EISSendFailure
@@ -39,7 +39,7 @@ class SubmissionSentToEISSpec extends AnyWordSpec {
   "SubmissionSentToEIS" must {
     "have the correct associated JSON event" when {
       "successfully sent" in {
-        val event = implicitly[EventSources[SubmissionSentToEIS]].eventFor(now, report(None)).get
+        val event = summon[EventSources[SubmissionSentToEIS]].eventFor(now, report(None)).get
 
         Json.toJson(event) shouldBe
           Json.parse(s"""
@@ -55,7 +55,7 @@ class SubmissionSentToEISSpec extends AnyWordSpec {
       }
 
       "send fails owing to http error" in {
-        val event = implicitly[EventSources[SubmissionSentToEIS]]
+        val event = summon[EventSources[SubmissionSentToEIS]]
           .eventFor(now, report(Some(EISSendFailure.ErrorResponse(503))))
           .get
 
@@ -79,7 +79,7 @@ class SubmissionSentToEISSpec extends AnyWordSpec {
       }
 
       "send fails owing to exception" in {
-        val event = implicitly[EventSources[SubmissionSentToEIS]]
+        val event = summon[EventSources[SubmissionSentToEIS]]
           .eventFor(now, report(Some(EISSendFailure.ExceptionThrown)))
           .get
 
@@ -102,7 +102,7 @@ class SubmissionSentToEISSpec extends AnyWordSpec {
       }
 
       "send fails owing to timeout" in {
-        val event = implicitly[EventSources[SubmissionSentToEIS]]
+        val event = summon[EventSources[SubmissionSentToEIS]]
           .eventFor(now, report(Some(EISSendFailure.Timeout)))
           .get
 
@@ -125,7 +125,7 @@ class SubmissionSentToEISSpec extends AnyWordSpec {
       }
 
       "send fails owing to circuit breaker" in {
-        val event = implicitly[EventSources[SubmissionSentToEIS]]
+        val event = summon[EventSources[SubmissionSentToEIS]]
           .eventFor(now, report(Some(EISSendFailure.TrafficSwitchNotFlowing)))
           .get
 
@@ -150,7 +150,7 @@ class SubmissionSentToEISSpec extends AnyWordSpec {
 
     "have the correct associated audit event" when {
       "successfully sent" in {
-        val event = implicitly[EventSources[SubmissionSentToEIS]].auditEventFor(report(None)).get
+        val event = summon[EventSources[SubmissionSentToEIS]].auditEventFor(report(None)).get
 
         event.auditType       shouldBe "SubmissionForwarded"
         event.transactionName shouldBe "ENS submission forwarded to EIS"
@@ -164,7 +164,7 @@ class SubmissionSentToEISSpec extends AnyWordSpec {
                        |""".stripMargin)
       }
       "send fails" in {
-        val event = implicitly[EventSources[SubmissionSentToEIS]]
+        val event = summon[EventSources[SubmissionSentToEIS]]
           .auditEventFor(report(Some(EISSendFailure.ErrorResponse(503))))
           .get
 

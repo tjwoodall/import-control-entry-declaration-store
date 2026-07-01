@@ -17,7 +17,7 @@
 package uk.gov.hmrc.entrydeclarationstore.services
 
 import cats.data.EitherT
-import cats.implicits._
+import cats.implicits.*
 import play.api.http.Status.BAD_REQUEST
 import uk.gov.hmrc.entrydeclarationstore.connectors.{EISSendFailure, EisConnector}
 import uk.gov.hmrc.entrydeclarationstore.logging.{ContextLogger, LoggingContext}
@@ -36,10 +36,10 @@ class SubmissionReplayService @Inject()(
   entryDeclarationRepo: EntryDeclarationRepo,
   eisConnector: EisConnector,
   reportSender: ReportSender,
-  clock: Clock)(implicit ec: ExecutionContext) {
+  clock: Clock)(using ec: ExecutionContext) {
   def getUndeliveredCounts: Future[UndeliveredCounts] = entryDeclarationRepo.getUndeliveredCounts
 
-  def replaySubmissions(submissionIds: Seq[String])(implicit hc: HeaderCarrier): Future[Either[Abort, BatchReplayResult]] =
+  def replaySubmissions(submissionIds: Seq[String])(using hc: HeaderCarrier): Future[Either[Abort, BatchReplayResult]] =
     submissionIds
       .foldLeft(Future.successful(Counts(0, 0).asRight[Abort]): Future[Either[Abort, Counts]]) { (acc, submissionId) =>
         acc.flatMap {
@@ -53,8 +53,8 @@ class SubmissionReplayService @Inject()(
       }
 
   private def replaySubmissionId(submissionId: String, state: Counts)(
-    implicit hc: HeaderCarrier): Future[Either[Abort, Counts]] = {
-    implicit val lc: LoggingContext = LoggingContext(submissionId = Some(submissionId))
+    using hc: HeaderCarrier): Future[Either[Abort, Counts]] = {
+    given lc: LoggingContext = LoggingContext(submissionId = Some(submissionId))
 
     {for {
       replayMetadata <- EitherT(doMetadataLookup(submissionId))
@@ -71,14 +71,14 @@ class SubmissionReplayService @Inject()(
       case Left(error) => Left(Abort(error, Counts(state.successCount, state.failureCount + 1)))
       case Right(result) => Right(result)
     }.recover {
-      case e => Left(Abort(BatchReplayError.MetadataRetrievalError,
+      case _ => Left(Abort(BatchReplayError.MetadataRetrievalError,
                            Counts(state.successCount, state.failureCount + 1)))
     }
 
   }
 
   private def doMetadataLookup(submissionId: String): Future[Either[BatchReplayError, Option[ReplayMetadata]]] = {
-    implicit val lc: LoggingContext = LoggingContext(submissionId = Some(submissionId))
+    given lc: LoggingContext = LoggingContext(submissionId = Some(submissionId))
 
     ContextLogger.info(s"Replaying submission $submissionId")
 
@@ -94,10 +94,10 @@ class SubmissionReplayService @Inject()(
   }
 
   private def doEisSubmit(optionReplayMetadata: Option[ReplayMetadata], submissionId: String)
-                         (implicit hc: HeaderCarrier): Future[Either[BatchReplayError, Boolean]] =
+                         (using hc: HeaderCarrier): Future[Either[BatchReplayError, Boolean]] =
     optionReplayMetadata match {
       case Some(replayMetadata) =>
-        implicit val lc: LoggingContext = LoggingContext(
+        given lc: LoggingContext = LoggingContext(
           eori          = replayMetadata.eori,
           correlationId = replayMetadata.correlationId,
           submissionId  = submissionId)
@@ -121,13 +121,13 @@ class SubmissionReplayService @Inject()(
     }
 
   private def setSubmissionState(submissionId: String, eisSendFailure: Option[EISSendFailure])(
-    implicit lc: LoggingContext): Future[Boolean] =
+    using lc: LoggingContext): Future[Boolean] =
     eisSendFailure match {
       case None    => entryDeclarationRepo.setEisSubmissionSuccess(submissionId, Instant.now(clock))
       case Some(_) => Future.successful(false)
     }
   private def sendEvent(replayMetadata: ReplayMetadata, eisSendFailure: Option[EISSendFailure])(
-    implicit hc: HeaderCarrier,
+    using hc: HeaderCarrier,
     lc: LoggingContext): Future[Boolean] =
     reportSender
       .sendReport(

@@ -21,5 +21,5 @@ import play.api.libs.json.{Json, Reads}
 case class ReplaySubmissionIds(submissionIds: Seq[String])
 
 object ReplaySubmissionIds {
-  implicit val reads: Reads[ReplaySubmissionIds] = Json.reads[ReplaySubmissionIds]
+  given reads: Reads[ReplaySubmissionIds] = Json.reads[ReplaySubmissionIds]
 }

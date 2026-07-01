@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.entrydeclarationstore.models.json
 
-import com.lucidchart.open.xtract.XmlReader._
 import com.lucidchart.open.xtract.{XmlReader, __}
 import play.api.libs.json.{Json, Writes}
 
@@ -25,7 +24,7 @@ case class Container(
 )
 
 object Container {
-  implicit val reader: XmlReader[Container] =
+  given reader: XmlReader[Container] =
     (__ \ "ConNumNR21").read[String].map(apply)
-  implicit val writes: Writes[Container] = Json.writes[Container]
+  given writes: Writes[Container] = Json.writes[Container]
 }

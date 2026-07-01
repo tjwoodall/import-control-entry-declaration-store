@@ -16,8 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.models.json
 
-import cats.syntax.all._
-import com.lucidchart.open.xtract.XmlReader._
+import cats.syntax.all.*
 import com.lucidchart.open.xtract.{XmlReader, __}
 import play.api.libs.json.{Json, Writes}
 
@@ -34,7 +33,7 @@ case class EntrySummaryDeclaration(
 
 object EntrySummaryDeclaration {
 
-  implicit def reader(implicit input: InputParameters): XmlReader[EntrySummaryDeclaration] =
+  given reader(using input: InputParameters): XmlReader[EntrySummaryDeclaration] =
     (
       (__ \ "HEAHEA" \ "SpeCirIndHEA1").read[String].optional,
       __.read[Metadata],
@@ -63,5 +62,5 @@ object EntrySummaryDeclaration {
           itinerary,
           amendment))
 
-  implicit val writes: Writes[EntrySummaryDeclaration] = Json.writes[EntrySummaryDeclaration]
+  given writes: Writes[EntrySummaryDeclaration] = Json.writes[EntrySummaryDeclaration]
 }

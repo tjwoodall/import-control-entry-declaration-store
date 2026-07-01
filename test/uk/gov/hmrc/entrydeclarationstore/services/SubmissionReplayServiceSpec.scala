@@ -20,11 +20,11 @@ import java.io.IOException
 import java.time.{Clock, Instant, ZoneOffset}
 
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
-import play.api.http.Status._
+import play.api.http.Status.*
 import uk.gov.hmrc.entrydeclarationstore.connectors.{EISSendFailure, MockEisConnector}
-import uk.gov.hmrc.entrydeclarationstore.models._
+import uk.gov.hmrc.entrydeclarationstore.models.*
 import uk.gov.hmrc.entrydeclarationstore.reporting.{MockReportSender, SubmissionSentToEIS}
 import uk.gov.hmrc.entrydeclarationstore.repositories.{MetadataLookupError, MockEntryDeclarationRepo}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -49,7 +49,7 @@ class SubmissionReplayServiceSpec
   val subId1        = "subId1"
   val subId2        = "subId2"
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  given hc: HeaderCarrier = HeaderCarrier()
 
   def metadata(submissionId: String): EntryDeclarationMetadata =
     EntryDeclarationMetadata(submissionId, MessageType.IE315, "5", now, None)

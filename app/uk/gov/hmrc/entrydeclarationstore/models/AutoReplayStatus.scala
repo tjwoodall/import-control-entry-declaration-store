@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.entrydeclarationstore.models
 
-import play.api.libs.json._
-import play.api.libs.json.Reads._
-import play.api.libs.functional.syntax._
-import uk.gov.hmrc.entrydeclarationstore.models.ReplayState.Implicits._
+import play.api.libs.json.*
+import play.api.libs.json.Reads.*
+import play.api.libs.functional.syntax.*
+import uk.gov.hmrc.entrydeclarationstore.models.ReplayState.Implicits.replayStateFormat
 
 sealed trait AutoReplayStatus {
   val lastReplay: Option[ReplayState]
@@ -58,12 +58,12 @@ object AutoReplayStatus {
       (__ \ "lastReplay").writeNullable[ReplayState])(unpackStatus)
   }
 
-  implicit val format: Format[AutoReplayStatus] = Format(reads, writes)
+  given format: Format[AutoReplayStatus] = Format(reads, writes)
 }
 
 case class AutoReplayRepoStatus(autoReplay: Boolean)
 
 object AutoReplayRepoStatus {
-  implicit val format: Format[AutoReplayRepoStatus] = Json.format[AutoReplayRepoStatus]
+  given format: Format[AutoReplayRepoStatus] = Json.format[AutoReplayRepoStatus]
 }
 

@@ -17,12 +17,12 @@
 package uk.gov.hmrc.entrydeclarationstore.services
 
 import cats.data.EitherT
-import cats.implicits._
+import cats.implicits.*
 import play.api.Logging
 import play.api.mvc.Headers
-import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve._
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
+import uk.gov.hmrc.auth.core.*
+import uk.gov.hmrc.auth.core.retrieve.*
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.*
 import uk.gov.hmrc.entrydeclarationstore.config.AppConfig
 import uk.gov.hmrc.entrydeclarationstore.connectors.ApiSubscriptionFieldsConnector
 import uk.gov.hmrc.entrydeclarationstore.nrs.IdentityData
@@ -41,7 +41,7 @@ class AuthService @Inject()(
   val authConnector: AuthConnector,
   apiSubscriptionFieldsConnector: ApiSubscriptionFieldsConnector,
   appConfig: AppConfig
-)(implicit ec: ExecutionContext)
+)(using ec: ExecutionContext)
     extends AuthorisedFunctions
     with CommonHeaders with Logging {
 
@@ -53,7 +53,7 @@ class AuthService @Inject()(
 
   case object AuthFail extends AuthError
 
-  def authenticate(implicit hc: HeaderCarrier, headers: Headers): Future[Option[UserDetails]] =
+  def authenticate(using hc: HeaderCarrier, headers: Headers): Future[Option[UserDetails]] =
     if (appConfig.nrsEnabled) {
       doAuthenticate(nrsRetrievals, identityDataBuilder)
     } else {
@@ -61,7 +61,7 @@ class AuthService @Inject()(
     }
 
   private def doAuthenticate[A](retrieval: Retrieval[A], identityBuilder: A => Option[IdentityData])(
-    implicit hc: HeaderCarrier,
+    using hc: HeaderCarrier,
     headers: Headers): Future[Option[UserDetails]] =
     authCSP(retrieval, identityBuilder)
       .recoverWith {
@@ -71,7 +71,7 @@ class AuthService @Inject()(
       .value
 
   private def authCSP[A](retrieval: Retrieval[A], identityBuilder: A => Option[IdentityData])(
-    implicit hc: HeaderCarrier,
+    using hc: HeaderCarrier,
     headers: Headers): EitherT[Future, AuthError, UserDetails] = {
     def auth: Future[Option[Option[IdentityData]]] =
       authorised(AuthProviders(AuthProvider.PrivilegedApplication))
@@ -93,7 +93,7 @@ class AuthService @Inject()(
   }
 
   private def authNonCSP[A](retrieval: Retrieval[A], identityBuilder: A => Option[IdentityData])(
-    implicit hc: HeaderCarrier,
+    using hc: HeaderCarrier,
     headers: Headers): EitherT[Future, AuthError, UserDetails] =
     EitherT(authorised(AuthProviders(AuthProvider.GovernmentGateway))
       .retrieve(retrieval and allEnrolments) {

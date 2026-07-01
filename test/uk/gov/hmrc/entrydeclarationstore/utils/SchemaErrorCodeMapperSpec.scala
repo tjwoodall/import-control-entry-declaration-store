@@ -18,7 +18,7 @@ package uk.gov.hmrc.entrydeclarationstore.utils
 
 import org.scalatest.Inside
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.entrydeclarationstore.repositories.MockEntryDeclarationRepo
 

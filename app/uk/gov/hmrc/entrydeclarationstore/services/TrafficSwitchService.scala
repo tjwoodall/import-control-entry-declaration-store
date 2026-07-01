@@ -28,7 +28,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class TrafficSwitchService @Inject()(repo: TrafficSwitchRepo, reportSender: ReportSender)(
-  implicit ec: ExecutionContext) {
+  using ec: ExecutionContext) {
   def resetTrafficSwitch: Future[Unit] = repo.resetToDefault
   def stopTrafficFlow: Future[Unit]    = repo.setTrafficSwitchState(TrafficSwitchState.NotFlowing).map(_ => ())
   def startTrafficFlow: Future[Unit] =
@@ -39,7 +39,7 @@ class TrafficSwitchService @Inject()(repo: TrafficSwitchRepo, reportSender: Repo
         case Some(TrafficSwitchStatus(_, Some(timeStopped), Some(timeStarted))) =>
           reportSender.sendReport(
             TrafficStarted(Duration.between(timeStopped, timeStarted))
-          )(implicitly[EventSources[TrafficStarted]], HeaderCarrier(), LoggingContext())
+          )(summon[EventSources[TrafficStarted]], HeaderCarrier(), LoggingContext())
         case _ =>
       }
       ()

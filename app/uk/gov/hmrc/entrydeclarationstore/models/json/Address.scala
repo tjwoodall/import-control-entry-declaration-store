@@ -16,8 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.models.json
 
-import cats.syntax.all._
-import com.lucidchart.open.xtract.XmlReader._
+import cats.syntax.all.*
 import com.lucidchart.open.xtract.{XmlReader, __}
 import play.api.libs.json.{Json, Writes}
 
@@ -41,5 +40,5 @@ object Address {
       (__ \ postalCodePath).read[String],
       (__ \ countryCodePath).read[String]
     ).mapN(apply)
-  implicit val writes: Writes[Address] = Json.writes[Address]
+  given writes: Writes[Address] = Json.writes[Address]
 }

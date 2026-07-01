@@ -18,23 +18,23 @@ package uk.gov.hmrc.entrydeclarationstore.controllers
 
 import com.codahale.metrics.MetricRegistry
 import org.apache.pekko.util.ByteString
-import org.scalatest.matchers.should.Matchers.{contain, convertToAnyShouldWrapper}
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.http.MimeTypes
 import play.api.libs.json.{JsString, JsValue}
 import play.api.mvc.{Request, Result}
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.entrydeclarationstore.config.MockAppConfig
-import uk.gov.hmrc.entrydeclarationstore.models.json._
-import uk.gov.hmrc.entrydeclarationstore.models._
-import uk.gov.hmrc.entrydeclarationstore.nrs._
-import uk.gov.hmrc.entrydeclarationstore.reporting._
-import uk.gov.hmrc.entrydeclarationstore.services._
-import uk.gov.hmrc.entrydeclarationstore.utils.ChecksumUtils._
+import uk.gov.hmrc.entrydeclarationstore.models.json.*
+import uk.gov.hmrc.entrydeclarationstore.models.*
+import uk.gov.hmrc.entrydeclarationstore.nrs.*
+import uk.gov.hmrc.entrydeclarationstore.reporting.*
+import uk.gov.hmrc.entrydeclarationstore.services.*
+import uk.gov.hmrc.entrydeclarationstore.utils.ChecksumUtils.*
 import uk.gov.hmrc.entrydeclarationstore.utils.SubmissionUtils.extractSubmissionHandledDetails
 import uk.gov.hmrc.entrydeclarationstore.utils.{MockIdGenerator, XmlFormatConfig, XmlFormats}
-import uk.gov.hmrc.entrydeclarationstore.validation._
+import uk.gov.hmrc.entrydeclarationstore.validation.*
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.time.{Clock, Instant, ZoneOffset}
@@ -58,9 +58,9 @@ class EntryDeclarationSubmissionControllerSpec
   val submissionId           = "3216783621-123873821-12332"
   val mrn                    = "mrn"
   val clientInfo: ClientInfo = ClientInfo(ClientType.CSP, None, None)
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  given hc: HeaderCarrier = HeaderCarrier()
 
-  implicit val xmlFormatConfig: XmlFormatConfig = XmlFormatConfig(responseMaxErrors = 100)
+  given xmlFormatConfig: XmlFormatConfig = XmlFormatConfig(responseMaxErrors = 100)
 
   val xmlPayload: NodeSeq =
     // @formatter:off

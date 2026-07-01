@@ -16,8 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.models.json
 
-import cats.syntax.all._
-import com.lucidchart.open.xtract.XmlReader._
+import cats.syntax.all.*
 import com.lucidchart.open.xtract.{XmlReader, __}
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.entrydeclarationstore.utils.ReaderUtils
@@ -43,7 +42,7 @@ case class GoodsItem(
 )
 
 object GoodsItem extends ReaderUtils {
-  implicit val reader: XmlReader[GoodsItem] = (
+  given reader: XmlReader[GoodsItem] = (
     (__ \ "IteNumGDS7").read[String],
     (__ \ "GooDesGDS23").read[String].optional,
     (__ \ "GooDesGDS23LNG").read[String].optional,
@@ -52,7 +51,7 @@ object GoodsItem extends ReaderUtils {
     (__ \ "ComRefNumGIM1").read[String].optional,
     (__ \ "UNDanGooCodGDI1").read[String].optional,
     __.read(Loading.reader("PlaLoaGOOITE333", "PlaLoaGOOITE333LNG", "PlaUnlGOOITE333", "PlaUnlGOOITE333LNG"))
-      .mapToNoneIfEmpty,
+      .mapToNoneIfIsEmpty,
     (__ \ "PRODOCDC2").read[Seq[Document]].mapToNoneIfEmpty,
     (__ \ "SPEMENMT2" \ "AddInfCodMT23").read[Seq[String]].mapToNoneIfEmpty,
     (__ \ "TRACONCO2")
@@ -62,7 +61,7 @@ object GoodsItem extends ReaderUtils {
           Address.reader("StrAndNumCO222", "CitCO224", "PosCodCO223", "CouCO225"),
           "NADLNGGTCO",
           "TINCO259"))
-      .mapToNoneIfEmpty,
+      .mapToNoneIfIsEmpty,
     (__ \ "COMCODGODITM" \ "ComNomCMD1").read[String].optional,
     (__ \ "TRACONCE2")
       .read(
@@ -71,12 +70,12 @@ object GoodsItem extends ReaderUtils {
           Address.reader("StrAndNumCE222", "CitCE224", "PosCodCE223", "CouCE225"),
           "NADLNGGICE",
           "TINCE259"))
-      .mapToNoneIfEmpty,
+      .mapToNoneIfIsEmpty,
     (__ \ "CONNR2").read[Seq[Container]].mapToNoneIfEmpty,
     (__ \ "IDEMEATRAGI970")
       .read(
         seqXmlReader(
-          IdentityOfMeansOfCrossingBorder.reader("NatIDEMEATRAGI973", "IdeMeaTraGIMEATRA971", "IdeMeaTraGIMEATRA972LNG")
+          using IdentityOfMeansOfCrossingBorder.reader("NatIDEMEATRAGI973", "IdeMeaTraGIMEATRA971", "IdeMeaTraGIMEATRA972LNG")
         ))
       .mapToNoneIfEmpty,
     (__ \ "PACGS2").read[Seq[Package]].mapToNoneIfEmpty,
@@ -87,7 +86,7 @@ object GoodsItem extends ReaderUtils {
           Address.reader("StrNumPRTNOT646", "CtyPRTNOT643", "PstCodPRTNOT644", "CouCodGINOT647"),
           "PRTNOT640LNG",
           "TINPRTNOT641"))
-      .mapToNoneIfEmpty
+      .mapToNoneIfIsEmpty
   ).mapN(apply)
-  implicit val writes: Writes[GoodsItem] = Json.writes[GoodsItem]
+  given writes: Writes[GoodsItem] = Json.writes[GoodsItem]
 }

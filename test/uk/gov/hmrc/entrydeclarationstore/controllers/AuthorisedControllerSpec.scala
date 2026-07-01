@@ -19,7 +19,7 @@ package uk.gov.hmrc.entrydeclarationstore.controllers
 import com.codahale.metrics.MetricRegistry
 import org.scalamock.matchers.ArgCapture.CaptureOne
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.Logging
 import play.api.http.{HeaderNames, Status}

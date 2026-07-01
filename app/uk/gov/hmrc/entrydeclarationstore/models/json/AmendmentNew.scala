@@ -16,8 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.models.json
 
-import cats.syntax.all._
-import com.lucidchart.open.xtract.XmlReader._
+import cats.syntax.all.*
 import com.lucidchart.open.xtract.{XmlReader, __}
 import play.api.libs.json.{Json, Writes}
 
@@ -26,14 +25,14 @@ import scala.util.matching.Regex
 case class AmendmentNew(movementReferenceNumber: String, place: Option[String], language: Option[String], dateTime: String)
 
 object AmendmentNew {
-  implicit val reader: XmlReader[AmendmentNew] = (
+  given reader: XmlReader[AmendmentNew] = (
     (__ \ "DocNumHEA5").read[String],
     (__ \ "AmdPlaHEA598").read[String].optional,
     (__ \ "AmdPlaHEA598LNG").read[String].optional,
     (__ \ "DatTimAmeHEA113").read[String]
     ).mapN((movementReferenceNumber, place, placeLanguage, datetime) =>
     AmendmentNew(movementReferenceNumber, place, placeLanguage, datetimeFormatter(datetime)))
-  implicit val writes: Writes[AmendmentNew] = Json.writes[AmendmentNew]
+  given writes: Writes[AmendmentNew] = Json.writes[AmendmentNew]
   val datetimeRegex: Regex               = "([0-9]{4})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})".r
 
   def datetimeFormatter(datetime: String): String = datetime match {

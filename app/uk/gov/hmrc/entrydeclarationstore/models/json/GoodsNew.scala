@@ -16,8 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.models.json
 
-import cats.syntax.all._
-import com.lucidchart.open.xtract.XmlReader._
+import cats.syntax.all.*
 import com.lucidchart.open.xtract.{XmlReader, __}
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.entrydeclarationstore.utils.ReaderUtils
@@ -30,12 +29,12 @@ case class GoodsNew(
   goodsItems: Option[Seq[GoodsItem]]
 )
 object GoodsNew extends ReaderUtils {
-  implicit val reader: XmlReader[GoodsNew] = (
+  given reader: XmlReader[GoodsNew] = (
     (__ \ "HEAHEA" \ "TotNumOfIteHEA305").read[Int].optional,
     (__ \ "HEAHEA" \ "TotNumOfPacHEA306").read[Int].optional,
     (__ \ "HEAHEA" \ "TotGroMasHEA307").read[String].optional,
     (__ \ "SEAID529").read[Seq[Seal]].mapToNoneIfEmpty,
     (__ \ "GOOITEGDS").read[Seq[GoodsItem]].optional
     ).mapN(apply)
-  implicit val writes: Writes[GoodsNew] = Json.writes[GoodsNew]
+  given writes: Writes[GoodsNew] = Json.writes[GoodsNew]
 }

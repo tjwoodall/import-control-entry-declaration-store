@@ -19,7 +19,7 @@ package uk.gov.hmrc.entrydeclarationstore.reporting.audit
 import org.scalamock.matchers.ArgCapture.CaptureOne
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.Inside
-import org.scalatest.matchers.should.Matchers.{convertToAnyShouldWrapper, not}
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsObject, JsString}
 import uk.gov.hmrc.entrydeclarationstore.config.MockAppConfig
@@ -42,7 +42,7 @@ class AuditHandlerSpec extends AnyWordSpec with MockFactory with MockAppConfig w
 
   val auditHandler = new AuditHandler(mockAuditConnector, mockAppConfig)
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  given hc: HeaderCarrier = HeaderCarrier()
 
   val detail: JsObject = JsObject(Seq("detail1" -> JsString("detailValue1")))
 

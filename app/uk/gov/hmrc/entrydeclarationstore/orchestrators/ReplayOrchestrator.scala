@@ -39,7 +39,7 @@ class ReplayOrchestrator @Inject()(
   submissionReplayService: SubmissionReplayService,
   replayLock: ReplayLock,
   appConfig: AppConfig,
-  clock: Clock)(implicit ec: ExecutionContext, mat: Materializer) extends Logging {
+  clock: Clock)(using ec: ExecutionContext, mat: Materializer) extends Logging {
 
   /**
     * Starts a replay
@@ -47,7 +47,7 @@ class ReplayOrchestrator @Inject()(
     * @return a tuple consisting of the initialization result and (mainly for testing) the overall final result of the replay
     */
   def startReplay(limit: Option[Int], trigger: ReplayTrigger = ReplayTrigger.Manual)(
-    implicit hc: HeaderCarrier): (Future[ReplayInitializationResult], Future[ReplayResult]) = {
+    using hc: HeaderCarrier): (Future[ReplayInitializationResult], Future[ReplayResult]) = {
 
     val replayStartTime = clock.instant
 
@@ -77,7 +77,7 @@ class ReplayOrchestrator @Inject()(
             _ <- insertState(replayId, trigger, numToReplay, replayStartTime)
           } yield ReplayInitializationResult.Started(replayId)
         } else {
-          replayStateRepo.lookupIdOfLatest.map(ReplayInitializationResult.AlreadyRunning)
+          replayStateRepo.lookupIdOfLatest.map(s => ReplayInitializationResult.AlreadyRunning(s))
         }
       }
   }
@@ -86,7 +86,7 @@ class ReplayOrchestrator @Inject()(
     replayStateRepo.insert(replayId, trigger, totalToReplay, startTime)
 
   private def startReplay(limit: Option[Int], replayStartTime: Instant, replayId: String)(
-    implicit hc: HeaderCarrier): Future[ReplayResult] = {
+    using hc: HeaderCarrier): Future[ReplayResult] = {
     logger.info(s"Starting replay (ID=$replayId)")
 
     submissionStateRepo

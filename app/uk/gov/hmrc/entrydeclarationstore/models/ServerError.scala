@@ -21,7 +21,7 @@ import uk.gov.hmrc.entrydeclarationstore.utils.XmlFormats
 import scala.xml.Node
 
 object ServerError {
-  implicit val xmlFormats: XmlFormats[ServerError.type] = new XmlFormats[ServerError.type] {
+  given xmlFormats: XmlFormats[ServerError.type] = new XmlFormats[ServerError.type] {
     override def toXml(a: ServerError.type): Node =
       // @formatter:off
       <err:ErrorResponse xmlns:err="http://www.govtalk.gov.uk/CM/errorresponse" xmlns:dsl="http://decisionsoft.com/rim/errorExtension" SchemaVersion="2.0">

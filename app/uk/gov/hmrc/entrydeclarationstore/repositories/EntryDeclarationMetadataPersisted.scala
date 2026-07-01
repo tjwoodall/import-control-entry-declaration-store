@@ -45,7 +45,7 @@ private[repositories] case class EntryDeclarationMetadataPersisted(
 }
 
 private[repositories] object EntryDeclarationMetadataPersisted extends InstantFormatter {
-  implicit val reads: Reads[EntryDeclarationMetadataPersisted] = (
+  given reads: Reads[EntryDeclarationMetadataPersisted] = (
     (__ \ "submissionId").read[String] and
       (__ \ "eori").read[String] and
       (__ \ "correlationId").read[String] and

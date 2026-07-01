@@ -30,7 +30,7 @@ trait MockSubmissionReplayService extends TestSuite with MockFactory {
   object MockSubmissionReplayService {
     def replaySubmissions(
       submissionIds: Seq[String]): CallHandler[Future[Either[Abort, BatchReplayResult]]] =
-      (mockSubmissionReplayService.replaySubmissions(_: Seq[String])(_: HeaderCarrier)).expects(submissionIds, *)
+      (mockSubmissionReplayService.replaySubmissions(_: Seq[String])(using _: HeaderCarrier)).expects(submissionIds, *)
 
     def getUndeliveredCounts: CallHandler[Future[UndeliveredCounts]] =
       (() => mockSubmissionReplayService.getUndeliveredCounts).expects()

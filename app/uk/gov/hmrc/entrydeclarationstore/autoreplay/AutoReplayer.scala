@@ -19,5 +19,5 @@ package uk.gov.hmrc.entrydeclarationstore.autoreplay
 import scala.concurrent.{ExecutionContext, Future}
 
 trait AutoReplayer {
-  def replay(replaySequenceCount: Int)(implicit ec: ExecutionContext): Future[Boolean]
+  def replay(replaySequenceCount: Int)(using ec: ExecutionContext): Future[Boolean]
 }

@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.nrs
 
-import play.api.libs.functional.syntax._
+import play.api.libs.functional.syntax.*
 import play.api.libs.json.{JsPath, OWrites}
 import uk.gov.hmrc.entrydeclarationstore.models.RawPayload
 
@@ -30,8 +30,8 @@ object NRSSubmission {
 
   private def encodeBase64(rawPayload: RawPayload) = encoder.encodeToString(rawPayload.byteArray)
 
-  implicit val writes: OWrites[NRSSubmission] = (
+  given writes: OWrites[NRSSubmission] = (
     (JsPath \ "payload").write[String].contramap(encodeBase64) and
       (JsPath \ "metadata").write[NRSMetadata]
-  )(unlift(NRSSubmission.unapply))
+  )(ns => Tuple.fromProductTyped(ns))
 }

@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.reporting
 
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsObject, Json}
 import uk.gov.hmrc.entrydeclarationstore.nrs.NRSMetadataTestData
@@ -49,13 +49,13 @@ class SubmissionHandledSpec extends AnyWordSpec with NRSMetadataTestData {
     transactionName: String,
     detail: JsObject): Unit = {
     "have the correct associated JSON event" in {
-      val event = implicitly[EventSources[SubmissionHandled]].eventFor(now, submissionHandled)
+      val event = summon[EventSources[SubmissionHandled]].eventFor(now, submissionHandled)
 
       event shouldBe None
     }
 
     "have the correct associated audit event" in {
-      val event = implicitly[EventSources[SubmissionHandled]].auditEventFor(submissionHandled).get
+      val event = summon[EventSources[SubmissionHandled]].auditEventFor(submissionHandled).get
 
       event.auditType       shouldBe auditType
       event.transactionName shouldBe transactionName

@@ -29,7 +29,7 @@ trait MockReplayOrchestrator extends TestSuite with MockFactory {
 
   object MockReplayOrchestrator {
     def startReplay(limit: Option[Int], trigger: ReplayTrigger = ReplayTrigger.Manual): CallHandler[(Future[ReplayInitializationResult], Future[ReplayResult])] =
-      (mockReplayOrchestrator.startReplay(_: Option[Int], _: ReplayTrigger)(_: HeaderCarrier)).expects(limit, trigger, *)
+      (mockReplayOrchestrator.startReplay(_: Option[Int], _: ReplayTrigger)(using _: HeaderCarrier)).expects(limit, trigger, *)
   }
 
 }

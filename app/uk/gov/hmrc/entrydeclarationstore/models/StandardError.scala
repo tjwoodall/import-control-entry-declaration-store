@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.models
 
-import play.api.http.Status._
+import play.api.http.Status.*
 import uk.gov.hmrc.entrydeclarationstore.utils.XmlFormats
 
 /**
@@ -25,7 +25,7 @@ import uk.gov.hmrc.entrydeclarationstore.utils.XmlFormats
 case class StandardError(status: Int, code: String, message: String)
 
 object StandardError {
-  implicit def xmlFormats[A <: StandardError]: XmlFormats[A] =
+  given xmlFormats[A <: StandardError]: XmlFormats[A] =
     (a: A) =>
       // @formatter:off
     <error>

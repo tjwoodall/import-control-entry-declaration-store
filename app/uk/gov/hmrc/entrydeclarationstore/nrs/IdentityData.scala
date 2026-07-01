@@ -17,7 +17,7 @@
 package uk.gov.hmrc.entrydeclarationstore.nrs
 
 import play.api.libs.json.{Json, Writes}
-import uk.gov.hmrc.auth.core.retrieve._
+import uk.gov.hmrc.auth.core.retrieve.*
 import uk.gov.hmrc.auth.core.{AffinityGroup, ConfidenceLevel, CredentialRole, Enrolments}
 import uk.gov.hmrc.entrydeclarationstore.models.InstantFormatter
 
@@ -47,15 +47,15 @@ case class IdentityData(
   loginTimes: LoginTimes)
 
 object IdentityData {
-  implicit val localDateTimeWrites: Writes[LocalDate]    = Writes.DefaultLocalDateWrites
-  implicit val instantWrites: Writes[Instant]            = InstantFormatter.instantWrites
-  implicit val credWrites: Writes[Credentials]           = Json.writes[Credentials]
-  implicit val nameWrites: Writes[Name]                  = Json.writes[Name]
-  implicit val agentInfoWrites: Writes[AgentInformation] = Json.writes[AgentInformation]
-  implicit val mdtpInfoWrites: Writes[MdtpInformation]   = Json.writes[MdtpInformation]
-  implicit val itmpNameWrites: Writes[ItmpName]          = Json.writes[ItmpName]
-  implicit val itmpAddressWrites: Writes[ItmpAddress]    = Json.writes[ItmpAddress]
-  implicit val loginTimesWrites: Writes[LoginTimes]      = Json.writes[LoginTimes]
-  implicit val enrolmentWrites: Writes[Enrolments]       = Json.writes[Enrolments]
-  implicit val writes: Writes[IdentityData]              = Json.writes[IdentityData]
+  given localDateTimeWrites: Writes[LocalDate]    = Writes.DefaultLocalDateWrites
+  given instantWrites: Writes[Instant]            = InstantFormatter.instantWrites
+  given credWrites: Writes[Credentials]           = Json.writes[Credentials]
+  given nameWrites: Writes[Name]                  = Json.writes[Name]
+  given agentInfoWrites: Writes[AgentInformation] = Json.writes[AgentInformation]
+  given mdtpInfoWrites: Writes[MdtpInformation]   = Json.writes[MdtpInformation]
+  given itmpNameWrites: Writes[ItmpName]          = Json.writes[ItmpName]
+  given itmpAddressWrites: Writes[ItmpAddress]    = Json.writes[ItmpAddress]
+  given loginTimesWrites: Writes[LoginTimes]      = Json.writes[LoginTimes]
+  given enrolmentWrites: Writes[Enrolments]       = Json.writes[Enrolments]
+  given writes: Writes[IdentityData]              = Json.writes[IdentityData]
 }

@@ -17,7 +17,7 @@
 package uk.gov.hmrc.entrydeclarationstore.nrs
 
 import play.api.http.MimeTypes
-import play.api.libs.json._
+import play.api.libs.json.*
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.entrydeclarationstore.models.InstantFormatter
 
@@ -35,7 +35,7 @@ case class NRSMetadata(
   searchKeys: SearchKeys)
 
 object NRSMetadata extends InstantFormatter {
-  implicit val writes: Writes[NRSMetadata] = Json.writes[NRSMetadata]
+  given writes: Writes[NRSMetadata] = Json.writes[NRSMetadata]
 
   def apply(
     userSubmissionTimestamp: Instant,

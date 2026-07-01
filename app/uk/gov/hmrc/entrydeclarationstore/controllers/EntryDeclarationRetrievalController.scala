@@ -27,7 +27,7 @@ import scala.concurrent.ExecutionContext
 class EntryDeclarationRetrievalController @Inject()(
   cc: ControllerComponents,
   service: EntryDeclarationRetrievalService,
-  appConfig: AppConfig)(implicit ec: ExecutionContext)
+  appConfig: AppConfig)(using ec: ExecutionContext)
     extends EisInboundAuthorisedController(cc, appConfig) {
 
   def getSubmission(id: String): Action[AnyContent] = authorisedAction.async { _ =>

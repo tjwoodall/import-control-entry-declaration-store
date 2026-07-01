@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.models
 
+import cats.Show
 import play.api.libs.json.Format
 import uk.gov.hmrc.entrydeclarationstore.utils.Enums
 
@@ -27,7 +28,9 @@ object MessageType {
 
   case object IE313 extends MessageType
 
-  implicit val formats: Format[MessageType] = Enums.format[MessageType]
+  private given show: Show[MessageType] = Show.show[MessageType](_.toString)
+
+  given formats: Format[MessageType] = Enums.format[MessageType]
 
   def apply(amendment: Boolean): MessageType =
     if (amendment) MessageType.IE313 else MessageType.IE315

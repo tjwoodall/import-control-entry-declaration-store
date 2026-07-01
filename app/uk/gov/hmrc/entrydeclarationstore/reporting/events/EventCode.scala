@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.reporting.events
 
+import cats.Show
 import play.api.libs.json.Writes
 import uk.gov.hmrc.entrydeclarationstore.utils.Enums
 
@@ -28,5 +29,7 @@ object EventCode {
 
   case object ENS_TO_EIS_FAILED extends EventCode
 
-  implicit val writes: Writes[EventCode] = Enums.writes
+  private given show: Show[EventCode] = Show.show[EventCode](_.toString)
+
+  given writes: Writes[EventCode] = Enums.writes
 }

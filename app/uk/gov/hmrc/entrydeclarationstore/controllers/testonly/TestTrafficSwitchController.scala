@@ -25,7 +25,7 @@ import scala.concurrent.ExecutionContext
 
 @Singleton()
 class TestTrafficSwitchController @Inject()(cc: ControllerComponents, service: TrafficSwitchService)(
-  implicit ec: ExecutionContext)
+  using ec: ExecutionContext)
     extends BackendController(cc) {
 
   def resetTrafficSwitch: Action[AnyContent] = Action.async { _ =>

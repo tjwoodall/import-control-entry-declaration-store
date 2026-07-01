@@ -79,7 +79,7 @@ class TrafficSwitchActor(trafficSwitchConfig: TrafficSwitchConfig, stateActorFac
     extends Actor
     with Stash
     with InjectedActorSupport {
-  implicit val ec: ExecutionContext = context.dispatcher
+  given ec: ExecutionContext = context.dispatcher
 
   val stateActor: ActorRef = stateActorFactory(context)
 

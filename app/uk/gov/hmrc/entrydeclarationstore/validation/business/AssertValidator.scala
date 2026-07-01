@@ -18,8 +18,7 @@ package uk.gov.hmrc.entrydeclarationstore.validation.business
 
 import uk.gov.hmrc.entrydeclarationstore.validation.ValidationError
 
-class AssertValidator(assert: Assert, assertEvaluator: AssertEvaluator)(
-  implicit val compilationContext: Assert.CompilationContext) {
+class AssertValidator(assert: Assert, assertEvaluator: AssertEvaluator) {
 
   // Call for all rules with the same context
   def validate(context: ContextNode): Option[ValidationError] =
@@ -32,6 +31,6 @@ class AssertValidator(assert: Assert, assertEvaluator: AssertEvaluator)(
 }
 
 object AssertValidator {
-  def apply(assert: Assert)(implicit compilationContext: Assert.CompilationContext): AssertValidator =
+  def apply(assert: Assert)(using compilationContext: Assert.CompilationContext): AssertValidator =
     new AssertValidator(assert, AssertEvaluator.createAssertEvaluator(assert))
 }

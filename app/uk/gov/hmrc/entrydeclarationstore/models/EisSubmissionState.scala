@@ -17,24 +17,28 @@
 package uk.gov.hmrc.entrydeclarationstore.models
 
 import cats.Show
-import cats.implicits._
+import cats.implicits.*
 import play.api.libs.json.Format
 import uk.gov.hmrc.entrydeclarationstore.utils.Enums
 
-sealed trait EisSubmissionState
+sealed trait EisSubmissionState {
+  val alternativeName: String
+}
 
 object EisSubmissionState {
-  case object NotSent extends EisSubmissionState
-  case object Sent extends EisSubmissionState
-  case object Error extends EisSubmissionState
-
-  implicit private val show: Show[EisSubmissionState] = Show.show[EisSubmissionState] {
-    case EisSubmissionState.Sent    => "sent"
-    case EisSubmissionState.NotSent => "not-sent"
-    case EisSubmissionState.Error   => "error"
+  case object NotSent extends EisSubmissionState {
+    override val alternativeName = "not-sent"
   }
+  case object Sent extends EisSubmissionState {
+    override val alternativeName: String = "sent"
+  }
+  case object Error extends EisSubmissionState {
+    override val alternativeName: String = "error"
+  }
+
+  private given show: Show[EisSubmissionState] = Show.show[EisSubmissionState](_.alternativeName)
 
   def mongoFormatString(eisSubmissionState: EisSubmissionState): String = eisSubmissionState.show
 
-  implicit val jsonFormat: Format[EisSubmissionState] = Enums.format[EisSubmissionState]
+  given jsonFormat: Format[EisSubmissionState] = Enums.format[EisSubmissionState]
 }

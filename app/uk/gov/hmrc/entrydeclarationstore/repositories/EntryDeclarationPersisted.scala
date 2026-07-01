@@ -17,7 +17,7 @@
 package uk.gov.hmrc.entrydeclarationstore.repositories
 
 import java.time.Instant
-import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats.Implicits._
+import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats.Implicits.*
 import play.api.libs.json.{Format, JsValue, Json}
 import uk.gov.hmrc.entrydeclarationstore.models.{EisSubmissionState, EntryDeclarationModel}
 
@@ -49,7 +49,7 @@ private[repositories] case class EntryDeclarationPersisted(
 
 private[repositories] object EntryDeclarationPersisted {
   import EisSubmissionState.jsonFormat
-  implicit val format: Format[EntryDeclarationPersisted] = Json.format[EntryDeclarationPersisted]
+  given format: Format[EntryDeclarationPersisted] = Json.format[EntryDeclarationPersisted]
 
   def from(entryDeclarationModel: EntryDeclarationModel, defaultTtl: FiniteDuration): EntryDeclarationPersisted = {
     import entryDeclarationModel._

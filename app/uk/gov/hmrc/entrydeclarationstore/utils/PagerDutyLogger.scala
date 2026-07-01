@@ -21,21 +21,21 @@ import uk.gov.hmrc.entrydeclarationstore.logging.{ContextLogger, LoggingContext}
 import uk.gov.hmrc.http.HttpResponse
 
 class PagerDutyLogger {
-  def logEISFailure(response: HttpResponse)(implicit lc: LoggingContext): Unit =
+  def logEISFailure(response: HttpResponse)(using lc: LoggingContext): Unit =
     ContextLogger.error(s"Submission failed with status ${response.status}", EISFailure(response.body))
 
-  def logEISError(e: Throwable)(implicit lc: LoggingContext): Unit =
+  def logEISError(e: Throwable)(using lc: LoggingContext): Unit =
     ContextLogger.error(s"Submission failed with error", e)
 
-  def logEISTimeout()(implicit lc: LoggingContext): Unit =
+  def logEISTimeout()(using lc: LoggingContext): Unit =
     ContextLogger.error(s"Submission timed out")
 
-  def logEISTrafficSwitchFlowStopped()(implicit lc: LoggingContext): Unit =
+  def logEISTrafficSwitchFlowStopped()(using lc: LoggingContext): Unit =
     ContextLogger.error(s"TRAFFIC_SWITCH_SET_TO_NOT_FLOWING - submission failed")
 
-  def logEventFailure(statusCode: Int)(implicit lc: LoggingContext): Unit =
+  def logEventFailure(statusCode: Int)(using lc: LoggingContext): Unit =
     ContextLogger.error(s"Send event failed with status $statusCode")
 
-  def logEventError(e: Throwable)(implicit lc: LoggingContext): Unit =
+  def logEventError(e: Throwable)(using lc: LoggingContext): Unit =
     ContextLogger.error(s"Send event failed with error", e)
 }

@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.validation
 
-import cats.implicits._
+import cats.implicits.*
 import com.codahale.metrics.MetricRegistry
 import play.api.Logging
 import uk.gov.hmrc.entrydeclarationstore.config.AppConfig
@@ -24,14 +24,14 @@ import uk.gov.hmrc.entrydeclarationstore.logging.{ContextLogger, LoggingContext}
 import uk.gov.hmrc.entrydeclarationstore.models.{ErrorWrapper, RawPayload}
 import uk.gov.hmrc.entrydeclarationstore.utils.{Timer, XmlFormatConfig}
 import uk.gov.hmrc.entrydeclarationstore.validation.business.RuleValidator
-import uk.gov.hmrc.entrydeclarationstore.validation.schema._
+import uk.gov.hmrc.entrydeclarationstore.validation.schema.*
 
 import javax.inject.{Inject, Named}
 import scala.xml.NodeSeq
 
 trait ValidationHandler {
   def handleValidation(rawPayload: RawPayload, eori: String, mrn: Option[String])(
-    implicit lc: LoggingContext): Either[ErrorWrapper[_], NodeSeq]
+    using lc: LoggingContext): Either[ErrorWrapper[_], NodeSeq]
 }
 
 class ValidationHandlerImpl @Inject()(
@@ -46,10 +46,10 @@ class ValidationHandlerImpl @Inject()(
     with Timer
     with Logging {
 
-  implicit val xmlFormatConfig: XmlFormatConfig = appConfig.xmlFormatConfig
+  given xmlFormatConfig: XmlFormatConfig = appConfig.xmlFormatConfig
 
   def handleValidation(rawPayload: RawPayload, eori: String, mrn: Option[String])(
-    implicit lc: LoggingContext): Either[ErrorWrapper[_], NodeSeq] =
+    using lc: LoggingContext): Either[ErrorWrapper[_], NodeSeq] =
     for {
       xmlPayload <- validateSchema(rawPayload, eori, mrn)
       _          <- checkMrn(xmlPayload, mrn)
@@ -64,7 +64,7 @@ class ValidationHandlerImpl @Inject()(
       case None => Right(())
     }
 
-  private def validateSchema(rawPayload: RawPayload, eori: String, mrn: Option[String])(implicit lc: LoggingContext) =
+  private def validateSchema(rawPayload: RawPayload, eori: String, mrn: Option[String])(using lc: LoggingContext) =
     time("Schema validation", "handleSubmission.validateSchema") {
       def logSchemaErrors(errs: ValidationErrors): Unit =
         ContextLogger.info(s"Schema validation errors found. Num errs=${errs.errors.length}")
@@ -103,7 +103,7 @@ class ValidationHandlerImpl @Inject()(
     if (docEori.contains(eori)) Right(()) else Left(ErrorWrapper(EORIMismatchError))
   }
 
-  private def validateRules(payload: NodeSeq, mrn: Option[String])(implicit lc: LoggingContext) =
+  private def validateRules(payload: NodeSeq, mrn: Option[String])(using lc: LoggingContext) =
     time("Rule validation", "handleSubmission.validateRules") {
 
       val validationResult = (mrn.isDefined, appConfig.optionalFieldsFeature) match {

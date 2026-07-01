@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.reporting
 
+import cats.Show
 import play.api.libs.json.Writes
 import uk.gov.hmrc.entrydeclarationstore.utils.Enums
 
@@ -25,5 +26,7 @@ object ClientType {
   case object CSP extends ClientType
   case object GGW extends ClientType
 
-  implicit val writes: Writes[ClientType] = Enums.writes
+  private given show: Show[ClientType] = Show.show[ClientType](_.toString)
+
+  given writes: Writes[ClientType] = Enums.writes
 }

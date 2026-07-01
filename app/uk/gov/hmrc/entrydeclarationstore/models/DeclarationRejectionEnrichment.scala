@@ -25,11 +25,11 @@ case class DeclarationRejectionEnrichmenResult(eisSubmissionDateTime: Option[Ins
 
 object DeclarationRejectionEnrichmenResult {
   import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats.Implicits.jatInstantFormat
-  implicit val jsonFormat: Format[DeclarationRejectionEnrichmenResult] = Json.format[DeclarationRejectionEnrichmenResult]
+  given jsonFormat: Format[DeclarationRejectionEnrichmenResult] = Json.format[DeclarationRejectionEnrichmenResult]
 }
 
 case class DeclarationRejectionEnrichment(eisSubmissionDateTime: Option[Instant])
 
 object DeclarationRejectionEnrichment extends InstantFormatter {
-  implicit val jsonFormat: Format[DeclarationRejectionEnrichment] = Json.format[DeclarationRejectionEnrichment]
+  given jsonFormat: Format[DeclarationRejectionEnrichment] = Json.format[DeclarationRejectionEnrichment]
 }

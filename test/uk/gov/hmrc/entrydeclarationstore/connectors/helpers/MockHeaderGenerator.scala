@@ -26,7 +26,7 @@ trait MockHeaderGenerator extends TestSuite with MockFactory {
 
   object MockHeaderGenerator {
     def headersForEIS(submissionId: String): CallHandler[Seq[(String, String)]] =
-      (mockHeaderGenerator.headersForEIS(_: String)(_: HeaderCarrier)).expects(submissionId, *)
+      (mockHeaderGenerator.headersForEIS(_: String)(using _: HeaderCarrier)).expects(submissionId, *)
   }
 
 }

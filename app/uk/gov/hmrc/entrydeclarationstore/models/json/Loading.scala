@@ -16,8 +16,7 @@
 
 package uk.gov.hmrc.entrydeclarationstore.models.json
 
-import cats.syntax.all._
-import com.lucidchart.open.xtract.XmlReader._
+import cats.syntax.all.*
 import com.lucidchart.open.xtract.{XmlReader, __}
 import play.api.libs.json.{Json, Writes}
 import uk.gov.hmrc.entrydeclarationstore.utils.HasEmpty
@@ -46,5 +45,5 @@ object Loading {
       (__ \ unloadingLanguagePath).read[String].optional
     ).mapN(apply)
 
-  implicit val writes: Writes[Loading] = Json.writes[Loading]
+  given writes: Writes[Loading] = Json.writes[Loading]
 }

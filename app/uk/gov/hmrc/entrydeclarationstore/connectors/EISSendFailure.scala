@@ -26,7 +26,7 @@ object EISSendFailure {
   case object ExceptionThrown extends EISSendFailure
   case object Timeout extends EISSendFailure
 
-  implicit val writes: Writes[EISSendFailure] = Writes {
+  given writes: Writes[EISSendFailure] = Writes {
     case ErrorResponse(status) => JsObject(Seq("type" -> JsString("ERROR_RESPONSE"), "status" -> JsNumber(status)))
     case TrafficSwitchNotFlowing    => JsObject(Seq("type" -> JsString("TRAFFIC_SWITCH_NOT_FLOWING")))
     case ExceptionThrown       => JsObject(Seq("type" -> JsString("EXCEPTION_THROWN")))

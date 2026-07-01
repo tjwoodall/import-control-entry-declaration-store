@@ -17,7 +17,7 @@
 package uk.gov.hmrc.entrydeclarationstore.utils
 
 import org.scalatest.matchers.must.Matchers
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.entrydeclarationstore.reporting.{ClientInfo, ClientType}
 

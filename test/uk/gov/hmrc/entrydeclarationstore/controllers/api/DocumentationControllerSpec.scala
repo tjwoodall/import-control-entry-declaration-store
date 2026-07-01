@@ -18,14 +18,14 @@ package uk.gov.hmrc.entrydeclarationstore.controllers.api
 
 import controllers.Assets
 import org.scalatest.Assertion
-import org.scalatest.matchers.should.Matchers.{be, convertToAnyShouldWrapper, have, include, not}
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.HttpErrorHandler
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers, Injecting}
 import play.api.{Application, Environment, Mode}
 import play.mvc.Http.MimeTypes

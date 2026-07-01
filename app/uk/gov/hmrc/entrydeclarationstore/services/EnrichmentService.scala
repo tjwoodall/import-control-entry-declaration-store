@@ -26,7 +26,7 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class EnrichmentService @Inject()(entryDeclarationRepo: EntryDeclarationRepo, override val metrics: MetricRegistry)(
-  implicit ec: ExecutionContext)
+  using ec: ExecutionContext)
     extends Timer
     with Logging {
 

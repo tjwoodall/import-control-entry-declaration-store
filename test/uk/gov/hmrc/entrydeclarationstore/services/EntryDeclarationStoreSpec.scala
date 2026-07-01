@@ -19,18 +19,18 @@ package uk.gov.hmrc.entrydeclarationstore.services
 import com.codahale.metrics.MetricRegistry
 import org.scalatest.Inside
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.matchers.should.Matchers.{a, convertToAnyShouldWrapper}
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsString, JsValue}
 import play.api.test.Helpers.{await, defaultAwaitTimeout}
 import uk.gov.hmrc.entrydeclarationstore.config.MockAppConfig
 import uk.gov.hmrc.entrydeclarationstore.connectors.{EISSendFailure, MockEisConnector}
-import uk.gov.hmrc.entrydeclarationstore.models._
+import uk.gov.hmrc.entrydeclarationstore.models.*
 import uk.gov.hmrc.entrydeclarationstore.models.json.{InputParameters, MockDeclarationToJsonConverter}
-import uk.gov.hmrc.entrydeclarationstore.reporting._
+import uk.gov.hmrc.entrydeclarationstore.reporting.*
 import uk.gov.hmrc.entrydeclarationstore.repositories.MockEntryDeclarationRepo
 import uk.gov.hmrc.entrydeclarationstore.utils.{MockIdGenerator, XmlFormatConfig}
-import uk.gov.hmrc.entrydeclarationstore.validation._
+import uk.gov.hmrc.entrydeclarationstore.validation.*
 import uk.gov.hmrc.http.HeaderCarrier
 
 import java.io.IOException
@@ -55,11 +55,11 @@ class EntryDeclarationStoreSpec
 
   val clientId      = "someClientId"
   val applicationId = "someAppId"
-  implicit val hc: HeaderCarrier = HeaderCarrier(
+  given hc: HeaderCarrier = HeaderCarrier(
     extraHeaders = Seq("x-client-id" -> clientId, "x-application-id" -> applicationId))
   val metrics: MetricRegistry = new MetricRegistry()
 
-  implicit val xmlFormatConfig: XmlFormatConfig = XmlFormatConfig(responseMaxErrors = 100)
+  given xmlFormatConfig: XmlFormatConfig = XmlFormatConfig(responseMaxErrors = 100)
 
   val receivedDateTime: Instant = Instant.now
   val clock: Clock              = Clock.fixed(receivedDateTime, ZoneOffset.UTC)

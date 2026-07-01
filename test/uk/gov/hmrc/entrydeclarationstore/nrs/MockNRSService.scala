@@ -29,6 +29,6 @@ trait MockNRSService extends TestSuite with MockFactory {
 
   object MockNRSService {
     def submit(nrsSubmission: NRSSubmission): CallHandler[Future[Option[NRSResponse]]] =
-      (mockNRSService.submit(_: NRSSubmission)(_: HeaderCarrier, _: LoggingContext)).expects(nrsSubmission, *, *)
+      (mockNRSService.submit(_: NRSSubmission)(using _: HeaderCarrier, _: LoggingContext)).expects(nrsSubmission, *, *)
   }
 }

@@ -26,7 +26,7 @@ import play.api.test.Injecting
 import play.api.{Application, Environment, Mode}
 import uk.gov.hmrc.entrydeclarationstore.housekeeping.HousekeepingScheduler
 import uk.gov.hmrc.entrydeclarationstore.repositories.LockRepositoryProvider
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 class ReplayLockISpec
     extends AnyWordSpec
@@ -40,7 +40,7 @@ class ReplayLockISpec
 
   val lockDuration: FiniteDuration = 500.millis
 
-  override implicit lazy val app: Application = new GuiceApplicationBuilder()
+  override given app: Application = new GuiceApplicationBuilder()
     .in(Environment.simple(mode = Mode.Dev))
     .configure("metrics.enabled" -> "false", "replay.lockDuration" -> s"${lockDuration.toMillis} millis")
     .disable[HousekeepingScheduler]

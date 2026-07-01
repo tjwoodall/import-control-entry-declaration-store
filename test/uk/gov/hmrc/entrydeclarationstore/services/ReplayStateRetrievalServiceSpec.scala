@@ -19,7 +19,7 @@ package uk.gov.hmrc.entrydeclarationstore.services
 import java.time.Instant
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.must.Matchers.contain
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import uk.gov.hmrc.entrydeclarationstore.models.{ReplayState, ReplayTrigger}
 import uk.gov.hmrc.entrydeclarationstore.repositories.MockReplayStateRepo

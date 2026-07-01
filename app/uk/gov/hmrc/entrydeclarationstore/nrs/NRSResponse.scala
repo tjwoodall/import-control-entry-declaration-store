@@ -21,5 +21,5 @@ import play.api.libs.json.{Json, Reads}
 case class NRSResponse(nrSubmissionId: String)
 
 object NRSResponse {
-  implicit val reads: Reads[NRSResponse] = Json.reads[NRSResponse]
+  given reads: Reads[NRSResponse] = Json.reads[NRSResponse]
 }

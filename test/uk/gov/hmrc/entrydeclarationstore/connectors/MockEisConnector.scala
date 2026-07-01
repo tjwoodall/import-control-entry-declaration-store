@@ -33,7 +33,7 @@ trait MockEisConnector extends TestSuite with MockFactory {
                         metadata: EntryDeclarationMetadata,
                         bypassTrafficSwitch: Boolean): CallHandler[Future[Option[EISSendFailure]]] =
       (mockEisConnector
-        .submitMetadata(_: EntryDeclarationMetadata, _: Boolean)(_: HeaderCarrier, _: LoggingContext))
+        .submitMetadata(_: EntryDeclarationMetadata, _: Boolean)(using _: HeaderCarrier, _: LoggingContext))
         .expects(metadata, bypassTrafficSwitch, *, *)
   }
 

@@ -19,7 +19,7 @@ package uk.gov.hmrc.entrydeclarationstore.models.json
 import java.time.Instant
 
 import org.scalatest.Inside
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.wordspec.AnyWordSpec
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.entrydeclarationstore.logging.LoggingContext
@@ -31,7 +31,7 @@ import scala.xml.{Elem, XML}
 class DeclarationToJsonConverterSpec extends AnyWordSpec with Inside {
   val declarationToJsonConverter = new DeclarationToJsonConverter
 
-  implicit val lc: LoggingContext = LoggingContext("eori", "corrId", "subId")
+  given lc: LoggingContext = LoggingContext("eori", "corrId", "subId")
 
   "EntrySummaryDeclaration toJson " must {
     "for submission" must {
